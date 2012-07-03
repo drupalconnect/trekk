@@ -4,8 +4,8 @@
     <format property="NOW" pattern="%Y%m%d%H%M%S" />
   </tstamp>
   <property name="source_dir" value="./" />
-  <property name="build_destination" value="/data/jenkins_builds/trekk_tester_builds_${NOW}" />
-  <property name="web_dir" value="/data/www/trekk-tester" />
+  <property name="build_destination" value="/opt/jenkins/trekk_tester_builds_${NOW}" />
+  <property name="web_dir" value="/var/www/trekk-tester" />
 
   <taskdef name="symlink" classname="phing.tasks.ext.SymlinkTask" />
 
