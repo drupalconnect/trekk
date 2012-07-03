@@ -1,0 +1,56 @@
+<?php
+function trekker_schema() {
+  $schema = array();
+  
+  $schema['trekker_config'] = array(
+     'export' => array(
+      'key' => 'machine_name',
+      'identifier' => 'config', // Exports will be as $preset
+      'default hook' => 'default_trekker_config',  // Function hook name.
+      'load hook' => 'default_trekker_config_load',
+      'api' => array(
+        'owner' => 'trekker',
+        'api' => 'default_trekker_configs',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+      //'load callback' => 'trekker_config_load', // Use this function to load presets (optional).
+    ),
+    'fields' => array(
+	    'id' => array(
+	      'type' => 'serial',
+	      'unsigned' => TRUE,
+	      'not null' => TRUE,
+	      'no export' => TRUE,
+	    ),
+	    'machine_name' => array(
+	      'type' => 'varchar',
+	      'length' => 255,
+	      'not null' => TRUE,
+	      'default' => 'default',
+	    ),
+	    'group_name' => array(
+	      'type' => 'varchar',
+	      'length' => 255,
+	      'not null' => TRUE,
+	      'default' => '',
+	    ),
+	    'description' => array(
+	      'type' => 'varchar',
+	      'length' => 255,
+	      'not null' => TRUE,
+	      'default' => '',
+	    ),
+	    'config' => array(
+	      'type' => 'text',
+	      'size' => 'big',
+	      'serialize' => TRUE,
+	      'not null' => TRUE,
+	    ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array('machine_name' => array('id', 'machine_name')),
+  );
+  
+  return $schema;
+}

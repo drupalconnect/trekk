@@ -4,3 +4,15 @@ sites/*/settings*.php
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
+
+# Ignore subversion, cvs, etc
+*.svn
+*.cvs
+
+# Ignore junk files
+*~
+.swp*
+.DS_Store
+.classpath
+.project
+nbproject
