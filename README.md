@@ -4,7 +4,7 @@ Drupal for the university...evolved
 ## Description 
 Trekk allows you to share content across sites and provides built-in integration with Flatfish for migrating legacy HTML content into Drupal.
 See the homepage, [trekk.drupalconnect.com](http://trekk.drupalconnect.com) for more information, including a FAQ.
-File Trekk specific issues [here](/issues/)
+File Trekk specific issues [here](/drupalstaffing/trekk/issues/)
 
 ## NOTE
 This software is **BETA**
