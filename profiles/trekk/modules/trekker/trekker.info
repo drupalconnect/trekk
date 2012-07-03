@@ -1,0 +1,14 @@
+name = Trekker
+description = Trekker
+core = 7.x
+package = Trekker
+
+dependencies[] = migrate
+
+files[] = trekker.install
+
+files[] = includes/Trekkerigration.inc
+files[] = includes/FilesMigration.inc
+files[] = includes/HTMLMigration.inc
+
+files[] = lib/scraper/HTMLScraper.inc
