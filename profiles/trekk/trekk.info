@@ -35,7 +35,3 @@ dependencies[] = rules_admin
 dependencies[] = views
 dependencies[] = views_ui
 dependencies[] = wysiwyg
-
-; Themes
-dependencies[] = omega
-dependencies[] = rubik
