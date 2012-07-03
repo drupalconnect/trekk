@@ -7,7 +7,7 @@ dependencies[] = migrate
 
 files[] = trekker.install
 
-files[] = includes/Trekkerigration.inc
+files[] = includes/TrekkerMigration.inc
 files[] = includes/FilesMigration.inc
 files[] = includes/HTMLMigration.inc
 
