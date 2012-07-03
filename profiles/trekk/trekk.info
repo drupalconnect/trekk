@@ -1,0 +1,31 @@
+name = Trekk
+description = Trekk starter.  
+distribution_name = Trekk 
+version = 1.x-dev
+core = 7.x
+
+; Dev Tools 
+dependencies[] = simpletest
+dependencies[] = devel
+
+; Core 
+dependencies[] = block
+dependencies[] = image
+dependencies[] = menu
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = dblog
+dependencies[] = search
+dependencies[] = field_ui
+dependencies[] = file
+
+; Contrib
+dependencies[] = admin_menu
+dependencies[] = admin_menu_toolbar
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = entity_token
+dependencies[] = rules
+dependencies[] = rules_admin
+dependencies[] = views
+dependencies[] = views_ui
