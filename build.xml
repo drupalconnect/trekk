@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="trekk-tester" default="deploy">
+  <tstamp>
+    <format property="NOW" pattern="%Y%m%d%H%M%S" />
+  </tstamp>
+  <property name="source_dir" value="./" />
+  <property name="build_destination" value="/data/jenkins_builds/trekk_tester_builds_${NOW}" />
+  <property name="web_dir" value="/data/www/trekk-tester" />
+
+  <taskdef name="symlink" classname="phing.tasks.ext.SymlinkTask" />
+
+  <target name="build">
+    <!-- copy checkout into our build directory -->
+    <copy todir="${build_destination}">
+      <fileset dir="${source_dir}">
+        <exclude name=".git" />
+        <exclude name=".git/**" />
+        <exclude name="build.xml" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="deploy" depends="build">
+    <delete file="${web_dir}/htdocs" />
+    <symlink target="${build_destination}" link="${web_dir}/htdocs" />
+  </target>
+
+</project>
