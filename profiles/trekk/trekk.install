@@ -108,7 +108,7 @@ function trekk_add_perms() {
 * Make rubik as the admin theme and default for content editing.
 */
 function trekk_set_themes() {
-  theme_enable(array('stark', 'rubik', 'tao');
+  theme_enable(array('stark', 'rubik', 'tao'));
   variable_set('theme_default', 'stark');
   variable_set('admin_theme', 'rubik');
   variable_set('node_admin_theme', '1');
