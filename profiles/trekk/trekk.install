@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Install, update and uninstall functions for the the Trekk install profile.
+ * Use this file to create/alter settings, use the .profile to change the installation workflow
  *
- * BAREBONES INITIAL
  */
+
 
 /**
  * Implements hook_install().
@@ -14,8 +14,84 @@
  * @see system_install()
  */
 function trekk_install() {
-  trekk_set_admin_theme();
+  // Standard functionality
+  trekk_add_standard_text_filters();
+  trekk_add_perms();
 
+  // Basic customization
+  trekk_set_themes();
+  trekk_create_page_type();
+
+}
+
+
+/**
+ * Add standard text filters.
+ *
+ * via the Standard profile installer.
+ */
+function trekk_add_standard_text_filters() {
+  // Add text formats.
+  $filtered_html_format = array(
+    'format' => 'filtered_html',
+    'name' => 'Filtered HTML',
+    'weight' => 0,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // HTML filter.
+      'filter_html' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 2,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $filtered_html_format = (object) $filtered_html_format;
+  filter_format_save($filtered_html_format);
+
+  $full_html_format = array(
+    'format' => 'full_html',
+    'name' => 'Full HTML',
+    'weight' => 1,
+    'filters' => array(
+      // URL filter.
+      'filter_url' => array(
+        'weight' => 0,
+        'status' => 1,
+      ),
+      // Line break filter.
+      'filter_autop' => array(
+        'weight' => 1,
+        'status' => 1,
+      ),
+      // HTML corrector filter.
+      'filter_htmlcorrector' => array(
+        'weight' => 10,
+        'status' => 1,
+      ),
+    ),
+  );
+  $full_html_format = (object) $full_html_format;
+  filter_format_save($full_html_format);
+}
+
+/**
+ * Add some basic permissions
+ */
+function trekk_add_perms() {
   // Allow visitor account creation, but with administrative approval.
   variable_set('user_register', USER_REGISTER_VISITORS_ADMINISTRATIVE_APPROVAL);
 
@@ -25,15 +101,41 @@ function trekk_install() {
 }
 
 /**
-* Set up rubik as the admin theme
-* and make it default for content editing
+* Set up themes
+*
+* Stark as content theme for now.
+*
+* Make rubik as the admin theme and default for content editing.
 */
-function trekk_set_admin_theme() {
-  db_update('system')
-    ->fields(array('status' => 1))
-    ->condition('type', 'theme')
-    ->condition('name', 'rubik')
-    ->execute();
+function trekk_set_themes() {
+  theme_enable(array('stark', 'rubik', 'tao');
+  variable_set('theme_default', 'stark');
   variable_set('admin_theme', 'rubik');
   variable_set('node_admin_theme', '1');
+ 
+  theme_disable(array('bartik'));
+}
+
+/**
+ * Create a Page content type
+ */
+function trekk_create_page_type() {
+  $types = array(
+    array(
+      'type' => 'pages',
+      'name' => st('Page'),
+      'base' => 'node_content',
+      'description' => st('Sample content type for demonstrative purposes.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
+
 }
