@@ -78,8 +78,8 @@ function trekk_site_type_form() {
  */
 function trekk_site_type_form_submit(&$form, &$form_state) {
   // enable requested modules
-  if ($form_state['values']['enable_flatfish'])? module_enable('trekk_flatfish');
-  if ('client' == $form_state['values']['site_type'])? module_enable('trekk_client'): module_enable('trekk_server');
+  ($form_state['values']['enable_flatfish'])? module_enable('trekk_flatfish'): NULL;
+  ('client' == $form_state['values']['site_type'])? module_enable('trekk_client'): module_enable('trekk_server');
 
   // only do this for servers
   if ('server' == $form_state['values']['site_type'] && $form_state['values']['add_demo_content']) {
