@@ -29,8 +29,6 @@ class HTMLScraper {
   public function __construct($migration, $html = NULL) {
   	$this->migration = $migration;
   	
-  	// remove script tags
-  	//$html = preg_replace(	'@<script[^>]*?.*?</script>@siu', '', $html);
   	$this->getQp($html);
   }
 
@@ -75,6 +73,3 @@ class HTMLScraper {
     return $this->qp = htmlqp($html);
   }
 }
-
-
-

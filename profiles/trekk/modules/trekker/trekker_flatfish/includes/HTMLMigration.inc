@@ -30,5 +30,3 @@ class HTMLMigration extends TrekkerMigration {
     $this->destination = new MigrateDestinationNode('page'); 
   }
 }
-
-

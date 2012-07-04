@@ -11,16 +11,6 @@ abstract class TrekkerMigration extends DynamicMigration {
     $this->initSource();
     $this->initDestination();
     
-    // This won't work the way we want in case a rollback was done.
-    //dpm(array(
-    //  'imported' => $this->importedCount(),
-    //  'processed' => $this->processedCount(),
-    //  'available' => $this->sourceCount(),
-    //  'update' => $this->map->getRowsNeedingUpdate(),
-    //  'failed' => $this->map->errorCount(),
-    //), $this->generateMachineName());
-    
-    
     // There are more items in the source than have been mapped.
     if ($this->processedCount() < ($this->sourceCount() - $this->errorCount())) {
     	drupal_set_message(t('Migration !name NOT ready for updates (system of record set to SOURCE)', array('!name' => "<em>" . $this->machineName . "</em>")));
@@ -216,7 +206,7 @@ abstract class TrekkerMigration extends DynamicMigration {
     $skip_value = 209;
     $values = field_get_items($entityType, $entity, $field_name, $entity->language);
     if ($values) {
-    	// This is crap. shouldn't there be a decent way to get a field's value?
+    	// shouldn't there be a decent way to get a field's value?
       foreach ($values as $value) {
         if (in_array($skip_value, $value)) {
         	drupal_set_message('Skipped ' . $ids);
@@ -229,7 +219,7 @@ abstract class TrekkerMigration extends DynamicMigration {
 }
 
 /**
- * Suck my balls, Migrate. You box me in at every turn. And the only way to get out is to punch a hole.
+ * 
  */
 class MigrateFieldMappingAlt extends MigrateFieldMapping {
   protected $callbacks = array();

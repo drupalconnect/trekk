@@ -36,4 +36,12 @@ libraries[htmlpurifier][download][url] = "http://htmlpurifier.org/releases/htmlp
 libraries[htmlpurifier][directory_name] = "htmlpurifier"
 libraries[htmlpurifier][type] = "library"
 
+libraries[spyc][download][type] = "git"
+libraries[spyc][download][url] = "git://github.com/mustangostang/spyc.git"
+libraries[spyc][directory_name] = "spyc"
+libraries[spyc][type] = "library"
 
+libraries[querypath][download][type] = "git"
+libraries[querypath][download][url] = "git://github.com/technosophos/querypath.git"
+libraries[querypath][directory_name] = "querypath"
+libraries[querypath][type] = "library"

@@ -35,11 +35,14 @@ function trekker_ctools_plugin_directory($module, $type) {
 * Provide a couple of default presets.
 */
 function trekker_default_trekker_config() {
-	module_load_include('php', 'trekker', 'lib/spyc');
+	//module_load_include('php', 'trekker', 'lib/spyc');
 
-	// @todo: Get the dir name holding configs from a variable
-	//$base = drupal_get_path('module', 'trekker') . '/tmp_migrations/';
 	$base = 'sites/all/tmp_migrations';
+
+  // TODO: figure out a way to gracefully handle emergency exits
+  if (!file_exists($base)) {
+    return '';
+  }
 
   foreach (scandir($base) as $dirname) {
   	if (!file_exists($base . '/' . $dirname . '/config.yml')) {

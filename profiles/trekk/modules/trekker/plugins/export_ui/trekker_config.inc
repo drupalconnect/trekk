@@ -8,8 +8,6 @@ $plugin = array(
     'menu description' => 'Administer Trekker configurations.',
   ),
   
-  //'default hook' => 'default_trekker_trekker_config',
-
   'title singular' => t('configuration'),
   'title plural' => t('configurations'),
   'title singular proper' => t('Trekker configuration'),
@@ -72,5 +70,4 @@ function trekker_ctools_export_ui_form_validate() {
 
 function trekker_ctools_export_ui_form_submit(&$form, &$form_state) {
 	$form_state['item']->config = $form_state['values']['options'];
-
 }
