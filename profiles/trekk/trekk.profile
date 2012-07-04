@@ -12,6 +12,7 @@
  * Allows the profile to alter the site configuration form.
  */
 function trekk_form_install_configure_form_alter(&$form, $form_state) {
+  trekk_installer_form_alter(&$form, &$form_state, $form_id) {
   // Pre-populate the site name with the server name.
   $form['site_information']['site_name']['#default_value'] = 'TREKK TESTER';
 }
@@ -42,11 +43,11 @@ function trekk_site_type_form() {
   );
 
   $form['site_type'] = array(
-    '#type' => 'checkboxes',
+    '#type' => 'radios',
     '#title' => st('Site Type'),
     '#description' => st("You can choose either a <em>Client</em> or a <em>Server</em>.  Clients receive content from the Server(s), it's a one-way flow but allows for incremental updates and Client overrides."),
     '#options' => $options,
-    '#default_value' => drupal_map_assoc(array_keys($options)),
+    '#default_value' => 'client'
   );
 
   $form['enable_flatfish'] = array(
@@ -78,8 +79,8 @@ function trekk_site_type_form() {
  */
 function trekk_site_type_form_submit(&$form, &$form_state) {
   // enable requested modules
-  ($form_state['values']['enable_flatfish'])? module_enable('trekk_flatfish'): NULL;
-  ('client' == $form_state['values']['site_type'])? module_enable('trekk_client'): module_enable('trekk_server');
+  //($form_state['values']['enable_flatfish'])? module_enable(array('trekk_flatfish')): NULL;
+  //('client' == $form_state['values']['site_type'])? module_enable('trekk_client'): module_enable(array('trekk_server'));
 
   // only do this for servers
   if ('server' == $form_state['values']['site_type'] && $form_state['values']['add_demo_content']) {
