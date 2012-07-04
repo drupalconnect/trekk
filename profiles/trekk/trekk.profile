@@ -96,7 +96,7 @@ function trekk_site_type_form_submit(&$form, &$form_state) {
       $node = (object) array('type' => 'pages');
       node_object_prepare($node);
       $node->title = "Page $i"; 
-      $node->body = $bodies[rand(0,4)]; 
+      $node->body[LANGUAGE_NONE]['value'] = $bodies[rand(0,4)]; 
       $node->uid = 1;
       // Make sure we set the default language
       $node->language = LANGUAGE_NONE;
