@@ -1,16 +1,17 @@
 <?php
-function trekker_schema() {
+
+function trekker_flatfish_schema() {
   $schema = array();
   
-  $schema['trekker_config'] = array(
+  $schema['trekker_flatfish_config'] = array(
      'export' => array(
       'key' => 'machine_name',
       'identifier' => 'config', // Exports will be as $preset
-      'default hook' => 'default_trekker_config',  // Function hook name.
-      'load hook' => 'default_trekker_config_load',
+      'default hook' => 'default_trekker_flatfish_config',  // Function hook name.
+      'load hook' => 'default_trekker_flatfish_config_load',
       'api' => array(
-        'owner' => 'trekker',
-        'api' => 'default_trekker_configs',  // Base name for api include files.
+        'owner' => 'trekker_flatfish',
+        'api' => 'default_trekker_flatfish_configs',  // Base name for api include files.
         'minimum_version' => 1,
         'current_version' => 1,
       ),

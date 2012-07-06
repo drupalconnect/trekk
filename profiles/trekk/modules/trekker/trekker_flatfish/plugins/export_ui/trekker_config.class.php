@@ -9,11 +9,11 @@ class trekker_config extends ctools_export_ui {
 
       if (!$config->disabled) {
         foreach ($config->config as $component => $def) {
-          if (!strcmp('pages', $component)) {
-            $class = 'HTMLMigration';
-          }
           if (!strcmp('media', $component)) {
-            $class = 'FilesMigration';
+            $class = 'FilesImport';
+          }
+          else {
+            $class = 'HTMLImport';
           }
 
           $args = array('machine_name' => $config->machine_name, 'component' => $component);
@@ -21,8 +21,5 @@ class trekker_config extends ctools_export_ui {
         }        
       }
     }
-  }
-
-  function getComponents() {
   }
 }

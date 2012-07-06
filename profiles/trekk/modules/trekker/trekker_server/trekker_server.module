@@ -1,0 +1,299 @@
+<?php
+
+/**
+ * Implementation of hook_menu
+ *
+ * Create a menu item for the server test
+ */
+function trekker_server_menu() {
+	$items = array();
+
+	$items['trekker-server-test'] = array(
+	  'title' => 'Trekker Server Test',
+    'page callback' => 'trekker_server_test',
+    'access arguments' => array('access content'), # restrict this
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+	return $items;
+}
+
+/**
+ * Quick 'n Dirty way to test the Trekker Server
+ */
+function trekker_server_test() {
+  #	make into config setting
+  #	$url = 'http://example.com/rest/taxonomy_term/getChildren';
+	$getargs = array();
+	foreach ($_GET as $key=>$value) {
+		$key = check_plain($key);
+		$value = check_plain($value);
+		$getargs[$key] = $value;
+	}
+	$options = array('method' => 'POST', 'data' => drupal_http_build_query($getargs));
+	$response = drupal_http_request($url, $options);
+	dpm($response);
+	dpm(drupal_json_decode($response->data));
+
+  return array('#markup' => t('Trekker Server Test'));
+}
+
+/**
+ * Implementation of hook_services_resources_alter
+ * 
+ * Handles nodes and taxo--this is how we hook into the resource to define the callbacks.
+ */
+function trekker_server_services_resources_alter(&$resources) {
+  // handle taxo
+  if (isset($resources['taxonomy_term'])) {
+	  $taxonomy_term_actions = array(
+	    'getChildren' => array(
+	      'callback' => '_taxonomy_action_get_children',
+	      'help' => t('Finds all children of a term ID.'),
+	      'access arguments' => array('access content'),
+	      'args' => array(
+	        0 => array(
+	          'name' => 'tid',
+	          'type' => 'int',
+	          'description' => t('A taxonomy term ID.'),
+	          'source' => array(
+	            'data' => 'tid',
+	            ),
+	          'optional' => TRUE,
+	          ),
+	        1 => array(
+	          'name' => 'vid',
+	          'type' => 'int',
+	          'description' => t('An optional vocabulary ID to restrict the child search.'),
+	          'source' => array(
+	            'data' => 'vid',
+	            ),
+	          'optional' => TRUE,
+	          ),
+	        2 => array(
+	          'name' => 'vocabulary_machine_name',
+	          'type' => 'string',
+	          'description' => t('An optional vocabulary machine name to restrict the child search.'),
+	          'source' => array(
+	            'data' => 'vocabulary_machine_name',
+	            ),
+	          'optional' => TRUE,
+	          ),
+	        ),
+	      ),
+	    );
+
+	  $resources['taxonomy_term']['actions'] += $taxonomy_term_actions;
+  }
+
+  // handle nodes
+  if (isset($resources['node'])) {
+  	$node_actions = array(
+  	  'views' => array(
+  	    'callback' => '_node_action_node_view',
+  	    'help' => t('Renders a node'),
+  	    'access arguments' => array('access content'),
+  	    'args' => array(
+  	      0 => array(
+  	        'name' => 'nid',
+  	        'type' => 'int',
+  	        'description' => t('An node ID'),
+  	        'source' => array('path' => 0),
+  	        'optional' => FALSE,
+  	        ),
+  	      1 => array(
+  	        'name' => 'view_mode',
+  	        'type' => 'string',
+  	        'source' => array('data' => 'view_mode'),
+  	        'optional' => TRUE,
+  	        ),
+  	      2 => array(
+  	        'name' => 'langcode',
+  	        'type' => 'string',
+  	        'source' => array('data' => 'langcode'),
+  	        'optional' => TRUE,
+  	        ),
+  	      ),
+  	    ),
+  	  'render' => array(
+  	    'callback' => '_node_action_node_render',
+  	    'help' => t('Renders a node'),
+  	    'access arguments' => array('access content'),
+  	    'args' => array(
+  	      0 => array(
+  	        'name' => 'nid',
+  	        'type' => 'int',
+  	        'description' => t('An node ID'),
+  	        'source' => array('path' => 0),
+  	        'optional' => FALSE,
+  	        ),
+  	      1 => array(
+  	        'name' => 'view_mode',
+  	        'type' => 'string',
+  	        'source' => array('data' => 'view_mode'),
+  	        'optional' => TRUE,
+  	        ),
+  	      2 => array(
+  	        'name' => 'langcode',
+  	        'type' => 'string',
+  	        'source' => array('data' => 'langcode'),
+  	        'optional' => TRUE,
+  	        ),
+  	      ),
+  	    ),
+  	  );
+  	$resources['node'] += array('targeted_actions' => $node_actions);
+  }
+}
+
+/**
+ * Implementation of hook_services_resources
+ *
+ * Defines the endpoint resources to which we respond.
+ */
+function trekker_server_services_resources() {
+  return $resources['views'] = array(
+    'targeted_actions' => array(
+      'render' => array(
+        'help' => t('Retrieves the output of a view. As POST: http://example.com/endpoint/views/<machine_name>/render. args[]=<args>, and display=<display> can be passed in data.'),
+        'callback' => '_views_resource_render',
+        'access arguments' => array('access content'),
+        'args' => array(
+          0 => array(
+            'name' => 'name',
+            'type' => 'string',
+            'optional' => FALSE,
+            'source' => array('path' => 0),
+            'description' => t('The name of the view'),
+          ),
+          1 => array(
+            'name' => 'display',
+            'type' => 'string',
+            'optional' => TRUE,
+            'source' => array('data' => 'display'),
+            'description' => t('The name of the view'),
+          ),
+          2 => array(
+            'name' => 'args',
+            'type' => 'array',
+            'optional' => TRUE,
+            'source' => array('data' => 'args'),
+            'description' => t('The name of the view'),
+          ),
+          3 => array(
+            'name' => 'limit',
+            'type' => 'array',
+            'optional' => TRUE,
+            'source' => array('data' => 'limit'),
+            'description' => t('The name of the view'),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+/**
+ * Render the given View's preview
+ */
+function _views_resource_render($name, $display = 'default', $args = array(), $limit = NULL) {
+
+	$view = views_get_view($name);
+
+	if (!$view) {
+		return array('status' => 'error getting view', 'args' => func_get_args());
+  }
+
+  $view = views_get_view($name);
+  $view->set_display($display);
+  $view->set_arguments($args);
+  $content = $view->preview();
+	return array(0 => $content);
+}
+
+/**
+ * Render a node and output its markup
+ */
+function _node_action_node_render($nid, $view_mode = 'full', $langcode = NULL) {
+	return array(drupal_render(_node_action_node_view($nid, $view_mode, $langcode)));
+}
+
+/**
+ * Get a node's render array
+ */
+function _node_action_node_view($nid, $view_mode = 'full', $langcode = NULL) {
+	$node = node_load(array('nid' => $nid));
+	return array(node_view($node, $view_mode, $langcode));
+}
+
+/**
+ * Handler for the taxonomy_term/getChildren action, which actually uses taxonomy_get_tree and not taxonomy_get_children
+ */
+function _taxonomy_action_get_children($tid = NULL, $vid = NULL, $vocabulary_machine_name = NULL) {
+	$parent = FALSE;
+	$bundle = '';
+
+	if (is_string($vocabulary_machine_name)) {
+		$parent = taxonomy_vocabulary_machine_name_load($vocabulary_machine_name);
+		$vid = $parent->vid;
+	}
+	else if (is_numeric($vid)) {
+		$parent = taxonomy_vocabulary_load($vid);
+	}
+	else if (is_string($vid)) {
+		$parent = taxonomy_vocabulary_machine_name_load($vid);
+	}
+	else if (is_numeric($tid)) {
+		$parent = taxonomy_term_load($tid);
+	}
+	else if (is_string($tid)) {
+		$parent = taxonomy_get_term_by_name($tid, $vid);
+		$tid = $parent->tid;
+	}
+
+	// Bail early due to bad data
+	if (!$parent) {
+		return array();
+	}
+
+	if (empty($tid) && !empty($vid)) {
+		// Favor the $vid
+		$tid = 0;
+		$bundle = $parent->machine_name;
+	}
+	else if (is_null($vid)) {
+		$vid = $parent->vid;
+		$bundle = $parent->vocabulary_machine_name;
+	}
+
+	$terms = taxonomy_get_tree($vid, $tid, $max_depth = NULL, $load_entities = TRUE);
+  $terms[] = $parent;
+
+  // For fields, we want a flatter structure without the langcode. And fields that are set up for
+  // single values should not be in an array.
+  $fields = field_info_instances('taxonomy_term', $bundle);
+
+  foreach ($fields as $field_name => $field_def) {
+  	$info = field_info_field($field_name);
+
+  	foreach ($terms as $i => $term) {
+			if (property_exists($term, $field_name)) {
+				$values = array();
+				$field = $term->$field_name;
+				if (isset($field['und'])) {
+					foreach ($field['und'] as $value) {
+						$values[] = $value['value'];
+					}
+					if (1 == $info['cardinality']) {
+						$terms[$i]->{$field_name} = array_shift($values);
+					}
+					else {
+						$terms[$i]->{$field_name} = $values;
+					}
+				}
+		  }
+  	}
+  }
+
+  return $terms;
+}

@@ -1,0 +1,79 @@
+<?php
+/**
+ * Loads config and sets up Imports--run as Migrations
+ */
+
+
+
+/*
+ * Implements hook_migrate_api()
+ */
+function trekker_flatfish_migrate_api() {
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}
+
+/**
+ * Implements of hook_ctools_plugin_api().
+ *
+ */
+function trekker_flatfish_ctools_plugin_api($owner, $api) {
+  if ($owner == 'trekker_flatfish' && $api == 'default_trekker_flatfish_configs') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements of hook_ctools_plugin_directory().
+ */
+function trekker_flatfish_ctools_plugin_directory($module, $type) {
+  if ($type =='export_ui') {
+    return 'plugins/export_ui';
+  }
+}
+
+/**
+ * Implementation of hook_default_trekker_flatfish_config().
+ *
+ * Load YAML for db conn info, tables, schema, mappings, etc.
+ * 
+ */
+function default_trekker_flatfish_config() {
+  $base = 'sites/all/flatfish_migrations';
+
+  // TODO: figure out a way to gracefully handle emergency exits
+  if (!file_exists($base) || !file_exists($base . '/config.yml')) {
+    return '';
+  }
+
+  $settings = Spyc::YAMLLoad($base . '/config.yml');
+
+  $schema = Spyc::YAMLLoad($base . '/schema.yml');
+
+  foreach ($settings['types'] as $type => $values) { 
+    $config[$type] = (object)array(
+      'machine_name' => $type,
+      'description' => '',
+      'api_version' => 1,
+      'disabled' => TRUE,
+      'config' => array(),
+    );
+
+    foreach ($schema['schema'] as $component => $schema) {
+      $config[$type]->config[$component] = array(
+          'driver' => 'mysql',
+          'database' => $settings['db'],
+          'username' => $settings['db_user'],
+          'password' => $settings['db_pass'],
+          'host' => isset($settings['db_host']) ? $settings['db_host'] : 'localhost',
+          'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
+          'fields' => $schema['fields'],
+          'primary key' => $schema['primary key'],
+        ),
+      );
+    }
+  }
+  return $config;
+}

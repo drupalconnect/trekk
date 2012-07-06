@@ -1,22 +1,17 @@
 <?php
-class FilesMigration extends TrekkerMigration {
+/**
+ * MediaMigration class, extends TrekkerMigration
+ * nearly all work is done by the base class
+ */
+
+class MediaMigration extends TrekkerMigration {
   public function __construct(Array $arguments) {  
     parent::__construct($arguments);
   }
   
   public function initSource() {
-    $name = $this->generateMachineName();
+    $name = $this->generateMachineName();  //WAT
 
-    $config = $this->getConfig();
-    
-    Database::addConnectionInfo($name, 'default', array(
-      'driver'   => $config['source']['connection']['info']['driver'],
-      'database' => $config['source']['connection']['info']['database'],
-      'username' => $config['source']['connection']['info']['username'],
-      'password' => $config['source']['connection']['info']['password'],
-      'host'     => $config['source']['connection']['hostname'],
-      'prefix'   => $config['source']['connection']['prefix'],
-    ));
     
     $query = Database::getConnection('default', $name)
       ->select('media', 'm')

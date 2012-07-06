@@ -1,0 +1,12 @@
+name = Trekker Flatfish
+description = Provides support for Flatfish migrations. Depends on SPYC and QueryPath.
+core = 7.x
+package = Trekker
+
+dependencies[] = migrate
+
+files[] = trekker.install
+files[] = includes/HTMLProcessor.inc
+files[] = includes/MediaMigration.inc
+files[] = includes/NodeMigration.inc
+files[] = includes/TrekkerMigration.inc
