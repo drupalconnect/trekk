@@ -46,29 +46,32 @@ function trekker_flatfish_default_trekker_flatfish_config() {
     return '';
   }
 
-  $settings = Spyc::YAMLLoad($base . '/config.yml');
+  if ($path = libraries_get_path('spyc')) {
+    require_once $path . '/spyc.php';
+  }
 
+  $settings = Spyc::YAMLLoad($base . '/config.yml');
   $schema = Spyc::YAMLLoad($base . '/schema.yml');
 
-  foreach ($settings['types'] as $type => $values) { 
+  foreach ($settings['types'] as $type => $values) {
     $config[$type] = (object)array(
       'machine_name' => $type,
       'description' => '',
       'api_version' => 1,
       'disabled' => TRUE,
-      'config' => array(),
-    );
-
-    foreach ($schema['schema'] as $component => $schema) {
-      $config[$type]->config[$component] = array(
-          'driver' => 'mysql',
-          'database' => $settings['db'],
-          'username' => $settings['db_user'],
-          'password' => $settings['db_pass'],
-          'host' => isset($settings['db_host']) ? $settings['db_host'] : 'localhost',
-          'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
-          'fields' => $schema['fields'],
-          'primary key' => $schema['primary key'],
+      'config' => array(
+        'driver' => 'mysql',
+        'database' => $settings['db'],
+        'username' => $settings['db_user'],
+        'password' => $settings['db_pass'],
+        'host' => isset($settings['db_host']) ? $settings['db_host'] : 'localhost',
+        'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
+    ));
+    // schema for media???
+    foreach ($schema['schema'] as $k => $v) {
+      $config[$type]->config[$k] = array(
+          'fields' => $v['fields'],
+          'primary key' => $v['primary key'],
       );
     }
   }

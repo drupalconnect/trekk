@@ -9,6 +9,7 @@ projects[drupal][version] = "7.x"
 
 
 ; Modules
+; TODO put these in /sites/all/modules/contrib
 projects[admin_menu][version] = "3.0-rc3"
 projects[ctools][version] = "1.0"
 projects[devel][version] = "1.3"
