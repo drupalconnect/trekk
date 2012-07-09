@@ -1,0 +1,103 @@
+<?php
+/**
+ * @file
+ * Module file is to implement hooks and their supporting functions
+ */
+
+/**
+ * Implements hook_flush_caches()
+ */
+function trekk_client_flush_caches() {
+  $aggregators = ctools_export_load_object('trekk_client_aggregator');
+  
+  foreach ($aggregators as $aggregator) {  
+    Migration::registerMigration('TrekkClientAggregator', $aggregator->name, $args = array('config' => $aggregator->name));
+  }
+}
+
+/**
+ * Implements hook_menu()
+ */
+function trekk_client_menu() {
+  $items = array();
+  return $items;
+}
+
+/**
+ * Implements hook_migrate_api
+ */
+function trekk_client_migrate_api() {
+  $api = array(
+    'api' => 2,
+  );
+  return $api;
+}
+
+/**
+ * Implements hook_ctools_plugin_directory()
+ */
+function trekk_client_ctools_plugin_directory($module, $plugin) {
+  switch ($plugin) {
+    case 'content_types':
+      return 'plugins/content_types';
+    case 'export_ui':
+      return 'plugins/export_ui';
+  }
+}
+
+/**
+* Implements hook_ctools_plugin_api().
+*
+* Tell Ctools that we support the default_ffmpeg_converter_presets API.
+*/
+function trekk_client_ctools_plugin_api($owner, $api) {
+  if ($owner == 'trekk_client' && $api == 'default_trekk_client_configs') {
+    return array('version' => 1);
+  }
+}
+
+/**
+ * Implements of trekk_client_default_trek_client_configs().
+ * 
+ * Provide a couple of default presets.
+ */
+function trekk_client_default_trekk_client_configs() {
+  $export = array();
+  return $export;
+}
+
+/**
+ * Modules implementing this hook may supply source schema definitions, as in hook_schema().
+ * @todo: Implement some kind of introspection so that where it's supported and reasonable
+ * we have the ability to derive schemas. That would be really cool.
+ */
+function trekk_client_source_schema() {
+	$schema = module_invoke_all('trekk_client_source_schema');
+	return $schema;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function trekk_client_tokens($type, $tokens, array $data = array(), array $options = array()) {
+	$replacements = array();
+  if ($type == 'trekk_client') {
+		// Collect the machine names:
+		$results = db_select('migrate_status', 'ms')
+							->fields('ms', array('machine_name'))
+							->orderBy('machine_name', 'ASC')
+							->execute();
+		foreach ($results as $row) {
+			$token_name = '['.$type.':'.$row->machine_name.'-last-imported-timestamp]';
+			$last_imported = db_select('migrate_log', 'ml')
+								->fields('ml', array('endtime'))
+								->condition('machine_name', $row->machine_name)
+								->isNotNull('endtime')
+								->orderBy('endtime', 'DESC')
+								->execute()
+								->fetchField();
+			$replacements[$token_name] = ($last_imported) ? (string) ((int) ($last_imported/1000)) : "1";
+    }
+  }
+  return $replacements;
+}
