@@ -69,7 +69,6 @@ function trekker_flatfish_default_trekker_flatfish_config() {
           'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
           'fields' => $schema['fields'],
           'primary key' => $schema['primary key'],
-        ),
       );
     }
   }

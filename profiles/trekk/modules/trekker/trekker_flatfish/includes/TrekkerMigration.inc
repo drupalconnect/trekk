@@ -189,7 +189,8 @@ abstract class TrekkerMigration extends DynamicMigration {
    *   The HTML to be processed 
    */
   public function processHTML($html) {
-  	return new HTMLProcessor($this, $html)->execute;
+  	 $processor = new HTMLProcessor($this, $html);
+     return $processor->execute;
   }
   
   /**
