@@ -61,12 +61,3 @@ function trekker_flatfish_schema() {
 
   return $schema;
 }
-
-/**
- * Implementation of hook_install
- *
- * Install the schema
- */
-function trekker_flatfish_install() {
-  drupal_install_schema('trekker_flatfish_schema');
-}
