@@ -1,0 +1,37 @@
+name = "Trekk Client"
+description = "Allow Trekk sites consume externally sourced content."
+package = "Trekk"
+core = 7.x
+
+dependencies[] = migrate
+dependencies[] = ctools
+
+files[] = trekk_client.install
+files[] = trekk_client.module
+files[] = trekk_client.admin.inc
+files[] = trekk_client.pages.inc
+
+files[] = plugins/destination/remote_file.inc
+
+;; Base classes for the four core components
+files[] = TrekkClientAggregator.inc
+files[] = TrekkClientSource.inc
+files[] = TrekkClientDestination.inc
+files[] = TrekkClientMapping.inc
+
+;; A source class for reading arbitrary JSON / XML
+files[] = includes/sources/TrekkClientSourceHTTP.inc
+
+;; Manage workflow on items fetched via HTTP
+files[] = includes/sources/ItemsManagerHTTP.inc
+
+;; Driver class for doing HTTP requests via CURL
+files[] = includes/sources/HTTPCurlRequest.inc
+
+;; Destination classes for assorted Drupal entities.
+files[] = includes/destinations/TrekkClientDestinationNode.inc
+files[] = includes/destinations/TrekkClientDestinationTerm.inc
+
+;; Mapping classes. This architecture needs to be deprecated in favor of
+;; exportables. This would bring it into line with the flatfish integration
+files[] = includes/mappings/TrekkDefaultTermMapping.inc

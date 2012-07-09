@@ -1,0 +1,67 @@
+<?php
+function trekk_client_schema () {
+  $schema['trekk_client_aggregator'] = array(
+    'description' => t('Trekk client configurations.'),
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'config',
+      'default hook' => 'default_trekk_client_config',
+      'api' => array(
+        'owner' => 'trekk_client',
+        'api' => 'default_trekk_client_configs',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'aid' => array(
+        'type' => 'serial',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'machine_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'source' => array(
+        'description' => 'The serialized source entity.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'destination' => array(
+        'description' => 'The serialized destination entity.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'mapping' => array(
+        'description' => 'The serialized mapping.',
+        'type' => 'blob',
+        'not null' => FALSE,
+        'size' => 'big',
+        'serialize' => TRUE,
+      ),
+      'refresh_interval' => array(
+        'type' => 'int',
+        'length' => 11,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('aid'),
+    'unique keys' => array('machine_name' => array('machine_name')),
+  );
+  
+  return $schema;
+}
+
