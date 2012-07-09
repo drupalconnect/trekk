@@ -1,57 +1,72 @@
 <?php
 
+/**
+ * Define the schema for CTools exportable config
+ *
+ * See http://www.sthlmconnection.se/sv/blog/exportable-configuration-ctools-revisited
+ * for a detailed walkthrough.
+ *
+ */
 function trekker_flatfish_schema() {
   $schema = array();
   
   $schema['trekker_flatfish_config'] = array(
-     'export' => array(
-      'key' => 'machine_name',
-      'identifier' => 'config', // Exports will be as $preset
-      'default hook' => 'default_trekker_flatfish_config',  // Function hook name.
-      'load hook' => 'default_trekker_flatfish_config_load',
+    'description' => 'Default config for Trekker Flatfish',
+    'export' => array(
+      'key' => 'machine_name', //WAT
+      'identifier' => 'config',
+      'default hook' => 'default_trekker_flatfish_config',
       'api' => array(
         'owner' => 'trekker_flatfish',
-        'api' => 'default_trekker_flatfish_configs',  // Base name for api include files.
+        'api' => 'default_trekker_flatfish_configs',
         'minimum_version' => 1,
         'current_version' => 1,
       ),
-      //'load callback' => 'trekker_config_load', // Use this function to load presets (optional).
     ),
     'fields' => array(
-	    'id' => array(
-	      'type' => 'serial',
-	      'unsigned' => TRUE,
-	      'not null' => TRUE,
-	      'no export' => TRUE,
-	    ),
-	    'machine_name' => array(
-	      'type' => 'varchar',
-	      'length' => 255,
-	      'not null' => TRUE,
-	      'default' => 'default',
-	    ),
-	    'group_name' => array(
-	      'type' => 'varchar',
-	      'length' => 255,
-	      'not null' => TRUE,
-	      'default' => '',
-	    ),
-	    'description' => array(
-	      'type' => 'varchar',
-	      'length' => 255,
-	      'not null' => TRUE,
-	      'default' => '',
-	    ),
-	    'config' => array(
-	      'type' => 'text',
-	      'size' => 'big',
-	      'serialize' => TRUE,
-	      'not null' => TRUE,
-	    ),
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'no export' => TRUE,
+      ),
+      'machine_name' => array( //WAT
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'default',
+      ),
+      'group_name' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'config' => array(
+        'type' => 'text',
+        'size' => 'big',
+        'serialize' => TRUE,
+        'not null' => TRUE,
+      ),
     ),
     'primary key' => array('id'),
-    'unique keys' => array('machine_name' => array('id', 'machine_name')),
+    'unique keys' => array('machine_name' => array('id', 'machine_name')), //WAT
   );
-  
+
   return $schema;
+}
+
+/**
+ * Implementation of hook_install
+ *
+ * Install the schema
+ */
+function trekker_flatfish_install() {
+  drupal_install_schema('trekker_flatfish_schema');
 }

@@ -1,28 +1,28 @@
 <?php
 $plugin = array(
-  'schema' => 'trekker_config',
-  'access' => 'access content',
+  'schema' => 'trekker_flatfish_config',
+  'access' => 'access content', //TODO UPDATE
   'menu' => array(
-    'menu item' => 'trekker',
-    'menu title' => 'Trekker',
-    'menu description' => 'Administer Trekker configurations.',
+    'menu item' => 'trekker-flatfish',
+    'menu title' => 'Trekker Flatfish',
+    'menu description' => 'Administer Trekker Flatfish configurations.',
   ),
   
   'title singular' => t('configuration'),
   'title plural' => t('configurations'),
-  'title singular proper' => t('Trekker configuration'),
-  'title plural proper' => t('Trekker configurations'),
+  'title singular proper' => t('Trekker Flatfish configuration'),
+  'title plural proper' => t('Trekker Flatfish configurations'),
 
   'form' => array(
-    'settings' => 'trekker_ctools_export_ui_form',
-    'validate' => 'trekker_ctools_export_ui_form_validate',
-    'submit' => 'trekker_ctools_export_ui_form_submit',
+    'settings' => 'trekker_flatfish_ctools_export_ui_form',
+    'validate' => 'trekker_flatfish_ctools_export_ui_form_validate',
+    'submit' => 'trekker_flatfish_ctools_export_ui_form_submit',
   ),
   
-  'handler' => 'trekker_config',
+  'handler' => 'trekker_flatfish_config',
 );
 
-function trekker_ctools_export_ui_form(&$form, &$form_state) {
+function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
   $config = $form_state['item'];
   $form['schema'] = array(
     '#type' => 'fieldset',
@@ -62,12 +62,12 @@ function trekker_ctools_export_ui_form(&$form, &$form_state) {
   dpm($form);
 }
 
-function trekker_ctools_export_ui_form_validate() {
+function trekker_flatfish_ctools_export_ui_form_validate() {
 	foreach ($form_state['values']['options'] as $optgroup => $options) {
 		$form_state['values']['options'][$optgroup] = array_filter($options);
 	}
 }
 
-function trekker_ctools_export_ui_form_submit(&$form, &$form_state) {
+function trekker_flatfish_ctools_export_ui_form_submit(&$form, &$form_state) {
 	$form_state['item']->config = $form_state['values']['options'];
 }

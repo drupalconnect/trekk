@@ -1,9 +1,7 @@
 <?php
 /**
- * Loads config and sets up Imports--run as Migrations
+ * @file
  */
-
-
 
 /*
  * Implements hook_migrate_api()
@@ -40,7 +38,7 @@ function trekker_flatfish_ctools_plugin_directory($module, $type) {
  * Load YAML for db conn info, tables, schema, mappings, etc.
  * 
  */
-function default_trekker_flatfish_config() {
+function trekker_flatfish_default_trekker_flatfish_config() {
   $base = 'sites/all/flatfish_migrations';
 
   // TODO: figure out a way to gracefully handle emergency exits

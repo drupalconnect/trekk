@@ -1,5 +1,8 @@
 <?php
-class trekker_config extends ctools_export_ui {
+/**
+ * how does this get picked up? automatically via ctools???
+ */
+class trekker_flatfish_config extends ctools_export_ui {
 
   function list_form(&$form, &$form_state) {
     parent::list_form($form, $form_state);
@@ -9,13 +12,11 @@ class trekker_config extends ctools_export_ui {
 
       if (!$config->disabled) {
         foreach ($config->config as $component => $def) {
-          if (!strcmp('media', $component)) {
-            $class = 'FilesImport';
+          if (!strcmp('media', $component)) { $class = 'MediaMigration';
           }
           else {
-            $class = 'HTMLImport';
+            $class = 'NodeMigration';
           }
-
           $args = array('machine_name' => $config->machine_name, 'component' => $component);
           Migration::registerMigration($class, strtolower($config->machine_name . '_' . $component), $args);
         }        

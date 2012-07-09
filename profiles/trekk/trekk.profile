@@ -78,8 +78,15 @@ function trekk_site_type_form() {
  */
 function trekk_site_type_form_submit(&$form, &$form_state) {
   // enable requested modules
-  //($form_state['values']['enable_flatfish'])? module_enable(array('trekk_flatfish')): NULL;
-  //('client' == $form_state['values']['site_type'])? module_enable('trekk_client'): module_enable(array('trekk_server'));
+  if ($form_state['values']['enable_flatfish']) {
+    module_enable(array('trekker_flatfish', 'migrate'));
+  }
+  if ('client' == $form_state['values']['site_type']) {
+    module_enable('trekker_client', 'migrate');
+  }
+  else {
+    module_enable(array('trekker_server', 'services', 'ctools'));
+  }
 
   // only do this for servers
   if ('server' == $form_state['values']['site_type'] && $form_state['values']['add_demo_content']) {
