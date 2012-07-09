@@ -3,9 +3,9 @@ core = 7.x
 api = 2
 projects[drupal][version] = "7.x"
 
-projects[trekk][download][type] = ""
-projects[trekk][download][url] = ""
-projects[trekk][type] = "module"
+;projects[trekk][download][type] = ""
+;projects[trekk][download][url] = ""
+;projects[trekk][type] = "module"
 
 
 ; Modules
@@ -18,6 +18,7 @@ projects[features][version] = 1.0-rc2
 projects[libraries][version] = "1.0"
 projects[migrate][version] = "2.3"
 projects[rules][version] = "2.1"
+projects[services][version] = 3.1
 projects[strongarm][version] = 2.0-rc1
 projects[views][version] = "3.3"
 projects[views_bulk_operations][version] = "3.0-rc1"

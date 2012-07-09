@@ -59,7 +59,7 @@ function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
       ),
 
   );
-  dpm($form);
+  //return ($form);
 }
 
 function trekker_flatfish_ctools_export_ui_form_validate() {

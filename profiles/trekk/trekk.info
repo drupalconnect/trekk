@@ -4,16 +4,7 @@ distribution_name = Trekk
 version = 1.x-dev
 core = 7.x
 
-; Trekk Server
-;dependencies[] = services
-;dependencies[] = ctools
-
-; Trekk Common
-dependencies[] = views
-dependencies[] = views_ui
-
-; Trekk Client/Flatfish
-;dependencies[] = migrate
+; Handle Trekk Dependencies in .profile 
 
 
 ; Dev Tools
@@ -34,6 +25,7 @@ dependencies[] = file
 ; Contrib
 dependencies[] = admin_menu
 dependencies[] = admin_menu_toolbar
+dependencies[] = ctools
 dependencies[] = ds
 dependencies[] = entity
 dependencies[] = entity_token
@@ -42,4 +34,6 @@ dependencies[] = libraries
 dependencies[] = strongarm
 dependencies[] = rules
 dependencies[] = rules_admin
+dependencies[] = views
+dependencies[] = views_ui
 dependencies[] = wysiwyg

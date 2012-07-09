@@ -1,6 +1,6 @@
 <?php
 /**
- * how does this get picked up? automatically via ctools???
+ *
  */
 class trekker_flatfish_config extends ctools_export_ui {
 
@@ -10,7 +10,7 @@ class trekker_flatfish_config extends ctools_export_ui {
     // Register migrations for enabled configs
     foreach ($form_state['object']->items as $name => $config) {
 
-      if (!$config->disabled) {
+      if (!isset($config->disabled)) {
         foreach ($config->config as $component => $def) {
           if (!strcmp('media', $component)) { $class = 'MediaMigration';
           }
