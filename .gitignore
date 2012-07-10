@@ -16,3 +16,6 @@ sites/*/private
 .classpath
 .project
 nbproject
+
+# Ignore sites/all modules, etc
+sites/*
