@@ -1,12 +1,17 @@
 <?php
 /**
  * @file
+ *
+ * Sets up hooks to use Migrate and ctools.
+ *
+ * Load YAML config which will be used to automatically register our
+ * custom Migration classes.
  */
 
 /*
  * Implements hook_migrate_api()
  */
-function trekker_flatfish_migrate_api() {
+function trekk_flatfish_migrate_api() {
   $api = array(
     'api' => 2,
   );
@@ -17,28 +22,36 @@ function trekker_flatfish_migrate_api() {
  * Implements of hook_ctools_plugin_api().
  *
  */
-function trekker_flatfish_ctools_plugin_api($owner, $api) {
-  if ($owner == 'trekker_flatfish' && $api == 'default_trekker_flatfish_configs') {
+function trekk_flatfish_ctools_plugin_api($owner, $api) {
+  if ($owner == 'trekk_flatfish' && $api == 'default_trekk_flatfish_configs') {
     return array('version' => 1);
   }
 }
 
 /**
  * Implements of hook_ctools_plugin_directory().
+ *
+ * Tells ctools where to find our files for the admin settings
+ *
+ * !IMPORTANT!
  */
-function trekker_flatfish_ctools_plugin_directory($module, $type) {
+function trekk_flatfish_ctools_plugin_directory($module, $type) {
   if ($type =='export_ui') {
     return 'plugins/export_ui';
   }
 }
 
 /**
- * Implementation of hook_default_trekker_flatfish_config().
+ * Implementation of hook_default_trekk_flatfish_config().
  *
- * Load YAML for db conn info, tables, schema, mappings, etc.
+ * Loads our YAML for ctools ui.
+ *
+ * !IMPORTANT!
  * 
  */
-function trekker_flatfish_default_trekker_flatfish_config() {
+function trekk_flatfish_default_trekk_flatfish_config() {
+  // TODO make $base config, add in error handling for spyc and missing/bad YAML
+  // TODO ALSO FIX THE RATS' NEST OF CONFIG
   $base = 'sites/all/flatfish_migrations';
 
   if ($path = libraries_get_path('spyc')) {
@@ -52,6 +65,7 @@ function trekker_flatfish_default_trekker_flatfish_config() {
     dpm("It does not look like your config.yml file has the correct syntax.", NULL, 'error');
     return;
   }
+
   foreach ($settings['types'] as $type => $values) {
     $config[$type] = (object)array(
       'machine_name' => $type,
@@ -76,5 +90,7 @@ function trekker_flatfish_default_trekker_flatfish_config() {
       }
     }
   }
-  return $config;
+
+  
+  return $config; // !IMPORTANT! 
 }

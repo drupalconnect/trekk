@@ -1,9 +1,9 @@
 <?php
 /**
- * MediaMigration class, extends TrekkerMigration
+ * MediaMigration class, extends TrekkFlatfishMigration
  * nearly all work is done by the base class
  */
-class MediaMigration extends TrekkerMigration {
+class MediaMigration extends TrekkFlatfishMigration {
   public function __construct(Array $arguments) {
     parent::__construct($arguments);
   }
@@ -27,7 +27,7 @@ class MediaMigration extends TrekkerMigration {
     }
   }
   public function getSourceFields() {
-    $fields = array('url', 'id', 'content');
+    $fields = array('url', 'id', 'contents');
     return $fields;
   }
 }

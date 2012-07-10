@@ -79,7 +79,7 @@ function trekk_site_type_form() {
 function trekk_site_type_form_submit(&$form, &$form_state) {
   // enable requested modules
   if ($form_state['values']['enable_flatfish']) {
-    module_enable(array('migrate', 'migrate_ui', 'trekker_flatfish'));
+    module_enable(array('migrate', 'migrate_ui', 'migrate_extras', 'trekk_flatfish'));
   }
   if ('client' == $form_state['values']['site_type']) {
     module_enable(array('migrate', 'migrate_ui', 'trekk_client'));

@@ -1,28 +1,28 @@
 <?php
 $plugin = array(
-  'schema' => 'trekker_config',
+  'schema' => 'trekk_flatfish_config',
   'access' => 'access content', //TODO UPDATE
   'menu' => array(
-    'menu item' => 'trekker-flatfish',
-    'menu title' => 'Trekker Flatfish',
-    'menu description' => 'Administer Trekker Flatfish configurations.',
+    'menu item' => 'trekk-flatfish',
+    'menu title' => 'Trekk Flatfish',
+    'menu description' => 'Administer Trekk Flatfish configurations.',
   ),
 
   'title singular' => t('configuration'),
   'title plural' => t('configurations'),
-  'title singular proper' => t('Trekker Flatfish configuration'),
-  'title plural proper' => t('Trekker Flatfish configurations'),
+  'title singular proper' => t('Trekk Flatfish configuration'),
+  'title plural proper' => t('Trekk Flatfish configurations'),
 
   'form' => array(
-    'settings' => 'trekker_flatfish_ctools_export_ui_form',
-    'validate' => 'trekker_flatfish_ctools_export_ui_form_validate',
-    'submit' => 'trekker_flatfish_ctools_export_ui_form_submit',
+    'settings' => 'trekk_flatfish_ctools_export_ui_form',
+    'validate' => 'trekk_flatfish_ctools_export_ui_form_validate',
+    'submit' => 'trekk_flatfish_ctools_export_ui_form_submit',
   ),
 
-  'handler' => 'trekker_config',
+  'handler' => 'trekk_flatfish_config',
 );
 
-function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
+function trekk_flatfish_ctools_export_ui_form(&$form, &$form_state) {
   $config = $form_state['item'];
 
   $form += array(
@@ -51,12 +51,12 @@ function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
   );
 }
 
-function trekker_flatfish_ctools_export_ui_form_validate(&$form, &$form_state) {
+function trekk_flatfish_ctools_export_ui_form_validate(&$form, &$form_state) {
   foreach ($form_state['values']['options'] as $optgroup => $options) {
     $form_state['values']['options'][$optgroup] = array_filter($options);
   }
 }
 
-function trekker_flatfish_ctools_export_ui_form_submit(&$form, &$form_state) {
+function trekk_flatfish_ctools_export_ui_form_submit(&$form, &$form_state) {
   $form_state['item']->config['components'] = $form_state['values']['options']['components'];
 }

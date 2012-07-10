@@ -1,12 +1,12 @@
 <?php
 /**
- * TrekkerMigration abstract base class, extends DynamicMigration
+ * TrekkFlatfishMigration abstract base class, extends DynamicMigration
  *
  * Does a lot of the work for the Node and Media subclasses
  * 
  */
 
-abstract class TrekkerMigration extends DynamicMigration {
+abstract class TrekkFlatfishMigration extends DynamicMigration {
 
   /**
    * Constructor
@@ -37,6 +37,7 @@ abstract class TrekkerMigration extends DynamicMigration {
     $this->initSource();
     $this->initDestination();
 
+/*
     // ERROR IF:
     // There are more items in the source than have been mapped.
     if ($this->processedCount() < ($this->sourceCount() - $this->errorCount())) {
@@ -50,6 +51,7 @@ abstract class TrekkerMigration extends DynamicMigration {
         , array('!name' => "<em>" . $this->getMachineName() . "</em>")));
       $this->systemOfRecord = Migration::DESTINATION;
     }
+*/
 
     $this->buildFieldMappings();
   }
@@ -62,11 +64,19 @@ abstract class TrekkerMigration extends DynamicMigration {
   }
 
   /**
+   * Migrate needs this
+   */
+  protected function generateMachineName($class_name = NULL) {
+    return strtolower(pathinfo($this->arguments['machine_name'] . '_' . $this->arguments['component'], PATHINFO_FILENAME));
+  }
+
+
+  /**
    * Load the confuration object (ctools exportable)
    */
   public function getConfig() {
     ctools_include('export');
-    $configs = ctools_export_load_object('trekker_config', 'names', array($this->arguments['machine_name']));
+    $configs = ctools_export_load_object('trekk_flatfish_config', 'names', array($this->arguments['machine_name']));
     return $this->config = (array)$configs;
   }
 
@@ -117,18 +127,19 @@ abstract class TrekkerMigration extends DynamicMigration {
     $config = $this->getConfig();
     if ('media' == strtolower($this->getComponentName())) {
       // MEDIA
-      $mapping = $this->addFieldMapping('content','content');
+      $mapping = $this->addFieldMapping('id','id'); // necessary???
+      $mapping = $this->addFieldMapping('contents','contents');
       $mapping->arguments(array('copy_blob' => TRUE));
       $mapping = $this->addFieldMapping('filename','filename'); //necessary???
     }
     else {
       foreach ($this->getSourceFields() as $def) {
-        if ('id' == $def || 'url' == $def) {
-          continue; // skip our keys
+        if ('id' == $def) {
+          continue; // skip our key
         }
         $mapping = $this->addFieldMapping($def, $def);
         // don't processHTML for media fields or the path and title
-        if (in_array($def, array('path','title'))) {
+        if (!in_array($def, array('path','title'))) {
           $mapping->arguments(array('format' => 'full_html'));
           $mapping->addCallback(array($this, 'processHTML'));
         }
@@ -147,6 +158,7 @@ abstract class TrekkerMigration extends DynamicMigration {
    */
   public function getMappedEntity($source_migrations, $source_keys, $default = NULL) {
     foreach ($source_migrations as $source_migration) {
+      //handleSourceMigration('article_media', array('id' => #));
       $result = $this->handleSourceMigration($source_migrations, $source_keys, $default);
       if ($result) {
         $sourceMigration = Migration::getInstance($source_migration);
@@ -169,7 +181,7 @@ abstract class TrekkerMigration extends DynamicMigration {
    */
   public function processHTML($html) {
     $processor = new HTMLProcessor($this, $html);
-    return $processor->execute;
+    return $processor->execute();
   }
 
   /**
@@ -192,59 +204,6 @@ abstract class TrekkerMigration extends DynamicMigration {
     }
     return $mapping;
   }
-
-  // not sure if this function runs, but let's check it out!
-  public function prepareRow($row) {
-    dpm($row);
-    return; //<---------------------------- DEPRECATED???
-    // Skip a row if skip condition is met.
-    if (!$this->systemOfRecord == Migration::DESTINATION) {
-      return;
-    }
-
-    // Get the destination row that corresponds to this source row
-    $keys = $this->source->getCurrentKey();
-    $destIds = (array)$this->map->lookupDestinationID($keys);
-
-    // Don't proceed unless an entity was loaded
-    if (!$destIds) {
-      return;
-    }
-
-    // This check works only on entities.
-    if (!is_callable(array($this->destination, 'getEntityType'))) {
-      return;
-    }
-
-    $entityType = $this->destination->getEntityType();
-
-    // Load the destination entity
-    $ids = array_filter(array_values($destIds));
-    if (!count($ids)) {
-      return;
-    }
-
-    $entities = entity_load($entityType, $ids);
-    if (!$entities) {
-      return;
-    }
-    $entity = array_shift($entities);
-
-    // Check the skip condition
-    $field_name = 'field_qa_status';
-    $skip_value = 209;
-    $values = field_get_items($entityType, $entity, $field_name, $entity->language);
-    if ($values) {
-      // shouldn't there be a decent way to get a field's value?
-      foreach ($values as $value) {
-        if (in_array($skip_value, $value)) {
-          drupal_set_message('Skipped ' . $ids);
-          return FALSE;
-        }
-      }
-    }
-  }
-
 }
 
 /**

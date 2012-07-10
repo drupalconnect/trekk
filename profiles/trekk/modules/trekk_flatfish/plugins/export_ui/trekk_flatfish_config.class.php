@@ -2,7 +2,7 @@
 /**
  *
  */
-class trekker_config extends ctools_export_ui {
+class trekk_flatfish_config extends ctools_export_ui {
   function list_form(&$form, &$form_state) {
     parent::list_form($form, $form_state);
     // Register migrations for each enabled configs

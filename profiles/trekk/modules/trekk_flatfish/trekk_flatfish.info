@@ -1,4 +1,4 @@
-name = Trek Flatfish
+name = Trekk Flatfish
 description = Provides support for Flatfish migrations. Depends on SPYC and QueryPath (PHP 5.3).
 core = 7.x
 package = Trekk
@@ -7,8 +7,8 @@ dependencies[] = migrate
 dependencies[] = migrate_extras
 dependencies[] = ctools
 
-files[] = trekker.install
+files[] = trekk_flatfish.install
 files[] = includes/HTMLProcessor.inc
 files[] = includes/MediaMigration.inc
 files[] = includes/NodeMigration.inc
-files[] = includes/TrekkerMigration.inc
+files[] = includes/TrekkFlatfishMigration.inc

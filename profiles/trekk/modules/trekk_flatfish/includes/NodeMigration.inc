@@ -1,9 +1,9 @@
 <?php
 /**
- * NodeMigration class, extends TrekkerMigration
+ * NodeMigration class, extends TrekkFlatfishMigration
  * a lot of the works is done by the base class
  */
-class NodeMigration extends TrekkerMigration {
+class NodeMigration extends TrekkFlatfishMigration {
   public function __construct(Array $arguments) {
     parent::__construct($arguments);
   }

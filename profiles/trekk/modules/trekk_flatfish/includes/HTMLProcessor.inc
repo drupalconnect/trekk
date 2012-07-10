@@ -33,7 +33,8 @@ class HTMLProcessor {
     $this->updateMediaTokens();
 
     $html = $this->qp->top('body')->innerHTML();
-    return check_markup($html, 'purified_html'); // load 'purified HTML' format filter and run it against the text
+    return $html;
+    //return check_markup($html, 'purified_html'); // load 'purified HTML' format filter and run it against the text
   }
 
   /**
@@ -43,7 +44,7 @@ class HTMLProcessor {
    */
   public function updateMediaTokens() {
     $migration = $this->migration;
-    $migration_base_name = $migration->getBaseName(); // again w/ the machine name 
+    $migration_base_name = strtolower($migration->getBaseName());
 
     $qp = $this->qp;
 
@@ -53,6 +54,9 @@ class HTMLProcessor {
       $id = trim(array_pop(explode(':', $href)), ']');
       $key = trim(array_shift(explode(':', $href)), '[');
 
+      if (!is_numeric($id)) {
+        continue;
+      }
       $item = $migration->getMappedEntity(array($migration_base_name . '_media'), array(array('id' => $id)));
 
       if ($item) {
@@ -65,6 +69,9 @@ class HTMLProcessor {
       $src = $img->attr('src');
       $id = trim(array_pop(explode(':', $src)), ']');
       $key = trim(array_shift(explode(':', $src)), '[');
+      if (!is_numeric($id)) {
+        continue;
+      }
       $item = $migration->getMappedEntity(array($migration_base_name . '_media'), array(array('id' => $id)));
 
       if ($item) {
