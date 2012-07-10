@@ -49,12 +49,8 @@ abstract class TrekkerMigration extends DynamicMigration {
    */
   public function getConfig() {
     ctools_include('export');
-
     $configs = ctools_export_load_object('trekker_config', 'names', array($this->arguments['machine_name']));
-
     $config = isset($configs[$this->arguments['machine_name']]) ? $configs[$this->arguments['machine_name']]->config[$this->arguments['component']] : NULL;
-
-    //module_load_include('php', 'trekker', 'lib/spyc');
 
     return $this->config = (array)$config;
   }

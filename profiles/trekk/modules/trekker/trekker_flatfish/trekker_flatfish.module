@@ -41,11 +41,6 @@ function trekker_flatfish_ctools_plugin_directory($module, $type) {
 function trekker_flatfish_default_trekker_flatfish_config() {
   $base = 'sites/all/flatfish_migrations';
 
-  // TODO: figure out a way to gracefully handle emergency exits
-  if (!file_exists($base) || !file_exists($base . '/config.yml')) {
-    return '';
-  }
-
   if ($path = libraries_get_path('spyc')) {
     require_once $path . '/spyc.php';
   }
@@ -75,5 +70,6 @@ function trekker_flatfish_default_trekker_flatfish_config() {
       );
     }
   }
+  dpm($config);
   return $config;
 }

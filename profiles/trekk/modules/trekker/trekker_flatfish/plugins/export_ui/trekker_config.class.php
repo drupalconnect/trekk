@@ -2,7 +2,7 @@
 /**
  *
  */
-class trekker_flatfish_config extends ctools_export_ui {
+class trekker_config extends ctools_export_ui {
 
   function list_form(&$form, &$form_state) {
     parent::list_form($form, $form_state);
@@ -12,7 +12,7 @@ class trekker_flatfish_config extends ctools_export_ui {
 
       if (!isset($config->disabled)) {
         foreach ($config->config as $component => $def) {
-          if (!strcmp('media', $component)) { $class = 'MediaMigration';
+          if (!strcasecmp('media', $component)) { $class = 'MediaMigration';
           }
           else {
             $class = 'NodeMigration';
