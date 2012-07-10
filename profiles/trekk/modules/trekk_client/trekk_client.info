@@ -1,5 +1,5 @@
 name = "Trekk Client"
-description = "Allow Trekk sites consume externally sourced content."
+description = "Allow Trekk sites to consume externally sourced content."
 package = "Trekk"
 core = 7.x
 

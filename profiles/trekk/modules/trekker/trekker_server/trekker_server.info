@@ -1,7 +1,0 @@
-name = Trekker Server
-description = Trekker Server exposes Views HTML or raw (JSON) output via Services for Trekker Clients to consume. 
-core = 7.x
-package = Trekker
-
-dependencies[] = views 
-dependencies[] = services 

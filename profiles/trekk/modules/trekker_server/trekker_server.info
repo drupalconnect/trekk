@@ -1,0 +1,7 @@
+name = Trekk Server
+description = Trekk Server exposes Views HTML or raw (JSON) output via Services for Trekk Clients to consume. 
+core = 7.x
+package = Trekk
+
+dependencies[] = views 
+dependencies[] = services 
