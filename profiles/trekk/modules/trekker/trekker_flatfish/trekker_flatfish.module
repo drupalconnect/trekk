@@ -66,11 +66,13 @@ function trekker_flatfish_default_trekker_flatfish_config() {
         'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
       ));
     foreach ($schema['schema'] as $k => $v) {
-      $config[$type]->config[$type] = array(
-        'machine_name' => $k,
-        'fields' => $v['fields'],
-        'primary key' => $v['primary key'],
-      );
+      if ($k == $type) {
+        $config[$type]->config[$type] = array(
+          'machine_name' => $v['machine_name'],
+          'fields' => $v['fields'],
+          'primary key' => $v['primary key'],
+        );
+      }
     }
   }
   return $config;

@@ -7,9 +7,9 @@
  */
 
 class HTMLProcessor {
-	
-	protected $qp; // QueryPath
-  
+
+  protected $qp; // QueryPath
+
   protected $migration;
 
   /**
@@ -18,10 +18,11 @@ class HTMLProcessor {
    * set migration and load QueryPath
    */
   public function __construct($migration, $html = NULL) {
-  	$this->migration = $migration;
+    $this->migration = $migration;
 
-    $directory = variable_get('querypath_directory', 'sites/all/libraries/QueryPath');
-    require_once $directory . '/QueryPath.php';
+    $directory = variable_get('querypath_directory', 'sites/all/libraries/querypath');
+    require_once $directory . '/src/qp.php';
+
     $this->qp = htmlqp($html);
   }
 
@@ -30,11 +31,11 @@ class HTMLProcessor {
    */
   public function execute() {
     $this->updateMediaTokens();
-    
+
     $html = $this->qp->top('body')->innerHTML();
     return check_markup($html, 'purified_html'); // load 'purified HTML' format filter and run it against the text
   }
-  
+
   /**
    * Update media tokens in anchor and img tags
    *
@@ -43,7 +44,7 @@ class HTMLProcessor {
   public function updateMediaTokens() {
     $migration = $this->migration;
     $migration_base_name = $migration->getBaseName(); // again w/ the machine name 
-    
+
     $qp = $this->qp;
 
     // Replace media tokens in anchor tags (ie, downloadable files--pdfs, docs, xls, etc)

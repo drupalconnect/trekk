@@ -17,13 +17,13 @@ abstract class TrekkerMigration extends DynamicMigration {
   public function __construct(Array $arguments) {
     $this->arguments = $arguments;
 
+    parent::__construct(MigrateGroup::getInstance($arguments['machine_name'] . '_' . $arguments['component']));
     $config = $this->getConfig();
-    if (empty($config)) {
+    if (empty($config) || empty($arguments)) {
       dpm("Could not find your configuration file, no migrations were performed", null, 'error');
       $this->systemOfRecord = Migration::SOURCE;
     }
 
-    parent::__construct(MigrateGroup::getInstance($arguments['machine_name']));
 
     // key is always URL
     $this->schemaKey = array(
@@ -41,17 +41,24 @@ abstract class TrekkerMigration extends DynamicMigration {
     // There are more items in the source than have been mapped.
     if ($this->processedCount() < ($this->sourceCount() - $this->errorCount())) {
       drupal_set_message(t('Migration !name NOT ready for updates (system of record set to SOURCE)'
-        , array('!name' => "<em>" . $this->machineName . "</em>")));
+        , array('!name' => "<em>" . $this->getMachineName() . "</em>")));
       $this->systemOfRecord = Migration::SOURCE;
     }
     // There are as many items in the source as have been mapped
     else if ($this->processedCount() >= ($this->sourceCount() - $this->errorCount())) {
       drupal_set_message(t('Migration !name ready for updates (system of record set to DESTINATION)'
-        , array('!name' => "<em>" . $this->machineName . "</em>")));
+        , array('!name' => "<em>" . $this->getMachineName() . "</em>")));
       $this->systemOfRecord = Migration::DESTINATION;
     }
 
     $this->buildFieldMappings();
+  }
+
+  /**
+   * Migrate needs this
+   */
+  public function getMachineName() {
+    return strtolower(pathinfo($this->arguments['machine_name'] . '_' . $this->arguments['component'], PATHINFO_FILENAME));
   }
 
   /**
@@ -107,28 +114,24 @@ abstract class TrekkerMigration extends DynamicMigration {
    */
   public function buildFieldMappings() {
 
-    // build standard url, title, path, body for content types
-    // mappings need to assume defaults!
-    // source name == destination name
-    // updatable == true
-    // format == full_html
-    // filter_html == true
-    //
-    // media doesn't need a mapping b/c it's always the same
-
-
     $config = $this->getConfig();
-
-    foreach ($this->getSourceFields() as $def) {
-      if ('id' == $def || 'url' == $def) {
-        continue; // skip our keys
-      }
-
-      $mapping = $this->addFieldMapping($def, $def);
-      // don't processHTML for media fields or the path and title
-      if (!strcasecmp('media', $this->getbaseName()) || in_array($def, array('path','title'))) {
-        $mapping->arguments(array('format' => 'full_html'));
-        $mapping->addCallback(array($this, 'processHTML'));
+    if ('media' == strtolower($this->getComponentName())) {
+      // MEDIA
+      $mapping = $this->addFieldMapping('content','content');
+      $mapping->arguments(array('copy_blob' => TRUE));
+      $mapping = $this->addFieldMapping('filename','filename'); //necessary???
+    }
+    else {
+      foreach ($this->getSourceFields() as $def) {
+        if ('id' == $def || 'url' == $def) {
+          continue; // skip our keys
+        }
+        $mapping = $this->addFieldMapping($def, $def);
+        // don't processHTML for media fields or the path and title
+        if (in_array($def, array('path','title'))) {
+          $mapping->arguments(array('format' => 'full_html'));
+          $mapping->addCallback(array($this, 'processHTML'));
+        }
       }
     }
   }

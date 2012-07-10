@@ -9,22 +9,36 @@ projects[drupal][version] = "7.x"
 
 
 ; Modules
-; TODO put these in /sites/all/modules/contrib
 projects[admin_menu][version] = "3.0-rc3"
+projects[admin_menu][subdir] = contrib
 projects[ctools][version] = "1.0"
+projects[ctools][subdir] = contrib
 projects[devel][version] = "1.3"
+projects[devel][subdir] = contrib
 projects[ds][version] = "1.5"
+projects[ds][subdir] = contrib
 projects[entity][version] = "1.0-rc3"
+projects[entity][subdir] = contrib
 projects[features][version] = 1.0-rc2
+projects[features][subdir] = contrib
 projects[libraries][version] = "1.0"
+projects[libraries][subdir] = contrib
 projects[migrate][version] = "2.4"
+projects[migrate][subdir] = contrib
 projects[migrate_extras][version] = "2.4"
+projects[migrate_extras][subdir] = contrib
 projects[rules][version] = "2.1"
+projects[rules][subdir] = contrib
 projects[services][version] = 3.1
+projects[services][subdir] = contrib
 projects[strongarm][version] = 2.0-rc1
+projects[strongarm][subdir] = contrib
 projects[views][version] = "3.3"
+projects[views][subdir] = contrib
 projects[views_bulk_operations][version] = "3.0-rc1"
+projects[views_bulk_operations][subdir] = contrib
 projects[wysiwyg][version] = "2.1"
+projects[wysiwyg][subdir] = contrib
 
 
 ; Themes

@@ -26,4 +26,8 @@ class MediaMigration extends TrekkerMigration {
       $row->filename = end(explode('/', $row->url));
     }
   }
+  public function getSourceFields() {
+    $fields = array('url', 'id', 'content');
+    return $fields;
+  }
 }
