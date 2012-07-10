@@ -52,9 +52,9 @@ function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
 }
 
 function trekker_flatfish_ctools_export_ui_form_validate(&$form, &$form_state) {
-	foreach ($form_state['values']['options'] as $optgroup => $options) {
-		$form_state['values']['options'][$optgroup] = array_filter($options);
-	}
+  foreach ($form_state['values']['options'] as $optgroup => $options) {
+    $form_state['values']['options'][$optgroup] = array_filter($options);
+  }
 }
 
 function trekker_flatfish_ctools_export_ui_form_submit(&$form, &$form_state) {

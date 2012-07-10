@@ -48,6 +48,9 @@ function trekker_flatfish_default_trekker_flatfish_config() {
   $settings = Spyc::YAMLLoad($base . '/config.yml');
   $schema = Spyc::YAMLLoad($base . '/schema.yml');
 
+  if (!isset($settings['types'])) {
+    return;
+  }
   foreach ($settings['types'] as $type => $values) {
     $config[$type] = (object)array(
       'machine_name' => $type,
@@ -62,7 +65,6 @@ function trekker_flatfish_default_trekker_flatfish_config() {
         'host' => isset($settings['db_host']) ? $settings['db_host'] : 'localhost',
         'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
       ));
-    // schema for media???
     foreach ($schema['schema'] as $k => $v) {
       $config[$type]->config[$type] = array(
         'machine_name' => $k,
@@ -71,4 +73,5 @@ function trekker_flatfish_default_trekker_flatfish_config() {
       );
     }
   }
+  return $config;
 }

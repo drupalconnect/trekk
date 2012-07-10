@@ -1,5 +1,13 @@
-## process
+## process == ctools MAGICK!!!
 
-1. Module picks up YAML. It's actually ctools exportables that drive that. The exportable code is able to read the YAML and derive itself from that. YAML includes all the infos necessary for a migration, including source and destination defs and mappings.
-2. Each exportable registers a migration and passes itself to it as config.
-3. When migrations are instantiated they load their exportable config and set themselves up to run, dynamically creating and configuring their source and destination classes and their mappings.
+1. Make sure your Drupal content types exist AND match your Flatfish CSV(s).
+2. Run Flatfish! 
+3. Make sure your database, config.yml, and schema.yml are all accessible to Drupal--the config.yml and schema.yml should be in the sites/all/flatfish\_migrations directory.
+4. We're using ctools' exportables for the config.  Enabled Flatfish Configurations get registered as Migrations.
+5. Update your Flatfish Configuration (admin/structure/trekker-flatfish) to Migrate Nodes (HTML) and/or Media (physical files).
+6. Run the Migration(s).
+
+# IMPORTANT NOTES
+
+* Migrate keeps tabs on all of your partial Migrations in migrate\_\* tables--remember this if you need to clean house.
+* Watch out, not all special variables, classes, functions are clearly marked at this time.

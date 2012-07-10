@@ -9,6 +9,7 @@ class MediaMigration extends TrekkerMigration {
   }
 
   public function initSource() {
+    parent::initSource(); // DB conn
     $query = Database::getConnection('default', 'flatfish')
       ->select('media', 'm')
       ->fields('m', $this->getSourceFields());
