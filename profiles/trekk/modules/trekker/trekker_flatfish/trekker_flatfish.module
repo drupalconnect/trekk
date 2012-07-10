@@ -61,15 +61,14 @@ function trekker_flatfish_default_trekker_flatfish_config() {
         'password' => $settings['db_pass'],
         'host' => isset($settings['db_host']) ? $settings['db_host'] : 'localhost',
         'prefix' => isset($settings['db_prefix']) ? $settings['db_prefix'] : '',
-    ));
+      ));
     // schema for media???
     foreach ($schema['schema'] as $k => $v) {
-      $config[$type]->config[$k] = array(
-          'fields' => $v['fields'],
-          'primary key' => $v['primary key'],
+      $config[$type]->config[$type] = array(
+        'machine_name' => $k,
+        'fields' => $v['fields'],
+        'primary key' => $v['primary key'],
       );
     }
   }
-  dpm($config);
-  return $config;
 }

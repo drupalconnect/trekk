@@ -34,7 +34,7 @@ function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
     'group_name' => array(
       '#type' => 'textfield',
       '#title' => t('Group'),
-      '#default_value' => $config->group_name,
+      '#default_value' => (isset($config->group_name))? $config->group_name: '',
     ),
     'options' => array(
       '#type' => 'fieldset',
@@ -42,17 +42,15 @@ function trekker_flatfish_ctools_export_ui_form(&$form, &$form_state) {
       '#description' => 'Type of Migration to run',
       '#tree' => TRUE,
       'components' => array(
-        '#type' => 'radios',
+        '#type' => 'checkboxes',
         '#title' => t('Enable'),
         '#options' => drupal_map_assoc(array(t('Node'), t('Media'))),
-        '#default_value' => ($config->config)? array_filter($config->config['components']): array(),
+        '#default_value' => (isset($config->config['components']))? array_filter($config->config['components']): array(),
       ),
     ),
   );
-  dpm($form);
 }
 
-// FIX ERROR HERE (array_filter).  ONE MIGRATION PER CONFIG OR MULTIPLE???
 function trekker_flatfish_ctools_export_ui_form_validate(&$form, &$form_state) {
 	foreach ($form_state['values']['options'] as $optgroup => $options) {
 		$form_state['values']['options'][$optgroup] = array_filter($options);
@@ -60,5 +58,5 @@ function trekker_flatfish_ctools_export_ui_form_validate(&$form, &$form_state) {
 }
 
 function trekker_flatfish_ctools_export_ui_form_submit(&$form, &$form_state) {
-	$form_state['item']->config = $form_state['values']['options'];
+  $form_state['item']->config['components'] = $form_state['values']['options']['components'];
 }

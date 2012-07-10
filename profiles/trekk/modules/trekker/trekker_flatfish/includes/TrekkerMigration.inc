@@ -18,10 +18,20 @@ abstract class TrekkerMigration extends DynamicMigration {
     $this->arguments = $arguments;
 
     $config = $this->getConfig();
-
-    // Is there a way to bail if we don't have $config???
+    if (empty($config)) {
+      dpm("Could not find your configuration file, no migrations were performed", null, 'error');
+      $this->systemOfRecord = Migration::SOURCE;
+    }
 
     parent::__construct(MigrateGroup::getInstance($arguments['machine_name']));
+
+    // key is always URL
+    $this->schemaKey = array(
+      'url' => array(
+        'type' => 'varchar',
+        'length' => 255,
+      )
+    );
 
     $this->initMap();
     $this->initSource();
@@ -50,41 +60,32 @@ abstract class TrekkerMigration extends DynamicMigration {
   public function getConfig() {
     ctools_include('export');
     $configs = ctools_export_load_object('trekker_config', 'names', array($this->arguments['machine_name']));
-    $config = isset($configs[$this->arguments['machine_name']]) ? $configs[$this->arguments['machine_name']]->config[$this->arguments['component']] : NULL;
-
-    return $this->config = (array)$config;
+    return $this->config = (array)$configs;
   }
 
   /**
    * Create a new MigrateSQLMap
    */
   public function initMap() {
-    $this->map = new MigrateSQLMap($this->machineName, $this->getSourceKeySchema(), MigrateDestinationNode::getKeySchema());    
+    $this->map = new MigrateSQLMap($this->machineName, $this->schemaKey, MigrateDestinationNode::getKeySchema());
   }
 
   public function initSource() {
     // setup the db conn
     $config = $this->getConfig();
-    Database::addConnectionInfo($name, 'default', array(
-      'driver'   => $config['driver'],
-      'database' => $config['database'],
-      'username' => $config['username'],
-      'password' => $config['password'],
-      'host'     => $config['host'],
-      'prefix'   => $config['prefix'],
+    $conn = $config[$this->getBaseName()]->config;
+
+    Database::addConnectionInfo('flatfish', 'default', array(
+      'driver'   => $conn['driver'],
+      'database' => $conn['database'],
+      'username' => $conn['username'],
+      'password' => $conn['password'],
+      'host'     => $conn['host'],
+      'prefix'   => $conn['prefix'],
     ));
   }
 
   abstract public function initDestination();
-
-
-  /**
-   * Construct the machine name from the source file name.
-   */
-  protected function generateMachineName($class_name = NULL) {
-    return strtolower(pathinfo($this->arguments['machine_name'] . '_' . $this->arguments['component'], PATHINFO_FILENAME));
-  }
-
 
   /**
    * Boilerplate getter
@@ -118,47 +119,24 @@ abstract class TrekkerMigration extends DynamicMigration {
 
     $config = $this->getConfig();
 
-    // grab from schema 
-    foreach ($config['mapping'] as $def) {
-      if (!isset($def['allow_update']) && $this->systemOfRecord == Migration::DESTINATION) {
-        drupal_set_message(t('Destination field !destination_field will not be updated for !name'
-          , array('!destination_field' => $def['destination_field'], '!name' => "<em>" . $this->machineName . "</em>")), 'warning');
-        continue;
-      }  		
-
-      // NOTE: source == destination
-      $mapping = $this->addFieldMapping($def['source_field'], $def['source_field']);
-
-      if (isset($def['arguments']) && !empty($def['arguments'])) {
-        $mapping->arguments($def['arguments']);
+    foreach ($this->getSourceFields() as $def) {
+      if ('id' == $def || 'url' == $def) {
+        continue; // skip our keys
       }
 
-      $callbacks = isset($def['callbacks']) && is_array($def['callbacks']) ? $def['callbacks'] : array();
-
-      foreach ($callbacks as $callback) {
-        $mapping->addCallback($callback);
-      }
-
-      // Add the processor if requested
-      if ($def['process_html']) {
+      $mapping = $this->addFieldMapping($def, $def);
+      // don't processHTML for media fields or the path and title
+      if (!strcasecmp('media', $this->getbaseName()) || in_array($def, array('path','title'))) {
+        $mapping->arguments(array('format' => 'full_html'));
         $mapping->addCallback(array($this, 'processHTML'));
       }
     }
   }
 
-  public function getSourceKeySchema() {
-    $config = $this->getConfig();
-    $source_key_schema = array();
-    foreach ($config['source']['primary key'] as $keyfield) {
-      $source_key_schema[$keyfield] = $config['source']['fields'][$keyfield];
-    }
-
-    return $source_key_schema;
-  }
-
   public function getSourceFields() {
     $config = $this->getConfig();
-    return array_keys($config['source']['fields']);
+    $keys = array_keys($config[$this->getBaseName()]->config[$this->getBaseName()]['fields']);
+    return $keys;
   }
 
   /**
@@ -212,59 +190,58 @@ abstract class TrekkerMigration extends DynamicMigration {
     return $mapping;
   }
 
-  /**
-   *
-   public function prepareRow($row) {
-     return; //<---------------------------- DEPRECATED???
-     // Skip a row if skip condition is met.
-     if (!$this->systemOfRecord == Migration::DESTINATION) {
-       return;
-}
+  // not sure if this function runs, but let's check it out!
+  public function prepareRow($row) {
+    dpm($row);
+    return; //<---------------------------- DEPRECATED???
+    // Skip a row if skip condition is met.
+    if (!$this->systemOfRecord == Migration::DESTINATION) {
+      return;
+    }
 
-// Get the destination row that corresponds to this source row
-$keys = $this->source->getCurrentKey();
-$destIds = (array)$this->map->lookupDestinationID($keys);
+    // Get the destination row that corresponds to this source row
+    $keys = $this->source->getCurrentKey();
+    $destIds = (array)$this->map->lookupDestinationID($keys);
 
-// Don't proceed unless an entity was loaded
-if (!$destIds) {
-  return;
-}
+    // Don't proceed unless an entity was loaded
+    if (!$destIds) {
+      return;
+    }
 
-// This check works only on entities.
-if (!is_callable(array($this->destination, 'getEntityType'))) {
-  return;
-}
+    // This check works only on entities.
+    if (!is_callable(array($this->destination, 'getEntityType'))) {
+      return;
+    }
 
-$entityType = $this->destination->getEntityType();
+    $entityType = $this->destination->getEntityType();
 
-// Load the destination entity
-$ids = array_filter(array_values($destIds));
-if (!count($ids)) {
-  return;
-}
+    // Load the destination entity
+    $ids = array_filter(array_values($destIds));
+    if (!count($ids)) {
+      return;
+    }
 
-$entities = entity_load($entityType, $ids);
-if (!$entities) {
-  return;
-}
-$entity = array_shift($entities);
+    $entities = entity_load($entityType, $ids);
+    if (!$entities) {
+      return;
+    }
+    $entity = array_shift($entities);
 
-// Check the skip condition
-$field_name = 'field_qa_status';
-$skip_value = 209;
-$values = field_get_items($entityType, $entity, $field_name, $entity->language);
-if ($values) {
-  // shouldn't there be a decent way to get a field's value?
-  foreach ($values as $value) {
-    if (in_array($skip_value, $value)) {
-      drupal_set_message('Skipped ' . $ids);
-      return FALSE;
-}
-}
-}
+    // Check the skip condition
+    $field_name = 'field_qa_status';
+    $skip_value = 209;
+    $values = field_get_items($entityType, $entity, $field_name, $entity->language);
+    if ($values) {
+      // shouldn't there be a decent way to get a field's value?
+      foreach ($values as $value) {
+        if (in_array($skip_value, $value)) {
+          drupal_set_message('Skipped ' . $ids);
+          return FALSE;
+        }
+      }
+    }
+  }
 
-}
-   */
 }
 
 /**

@@ -3,32 +3,29 @@
  * NodeMigration class, extends TrekkerMigration
  * a lot of the works is done by the base class
  */
-
 class NodeMigration extends TrekkerMigration {
-	public function __construct(Array $arguments) {
-		parent::__construct($arguments);
+  public function __construct(Array $arguments) {
+    parent::__construct($arguments);
   }
-  
+
   /**
    * run during constructor
    */
-  public function initSource() {  
+  public function initSource() {
     parent::initSource(); // DB conn
-    
-    $name = $this->generateMachineName(); //WAT
-    
-    $query = Database::getConnection('default', $name)
+
+    $name = $this->config[$this->getBaseName()]->config[$this->getBaseName()]['machine_name'];
+    $query = Database::getConnection('default', 'flatfish')
       ->select($name, 'type')
       ->fields('type', $this->getSourceFields());
-
     $this->source = new MigrateSourceSQL($query, array(), NULL, array('map_joinable' => FALSE));
   }
-  
+
   /**
    * run during constructor
    */
   public function initDestination() {
-    // need to update this
-    $this->destination = new MigrateDestinationNode($name); 
+    $name = $this->config[$this->getBaseName()]->config[$this->getBaseName()]['machine_name'];
+    $this->destination = new MigrateDestinationNode($name);
   }
 }
