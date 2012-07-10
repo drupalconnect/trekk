@@ -49,6 +49,7 @@ function trekker_flatfish_default_trekker_flatfish_config() {
   $schema = Spyc::YAMLLoad($base . '/schema.yml');
 
   if (!isset($settings['types'])) {
+    dpm("It does not look like your config.yml file has the correct syntax.", NULL, 'error');
     return;
   }
   foreach ($settings['types'] as $type => $values) {

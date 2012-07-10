@@ -21,6 +21,7 @@ function trekk_install() {
   // Basic customization
   trekk_set_themes();
   trekk_create_page_type();
+  trekk_create_article_type();
 
 }
 
@@ -124,6 +125,30 @@ function trekk_create_page_type() {
     array(
       'type' => 'pages',
       'name' => st('Page'),
+      'base' => 'node_content',
+      'description' => st('Sample content type for demonstrative purposes.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
+
+}
+
+/**
+ * Create Article, a second sample content type
+ */ 
+function trekk_create_article_type() {
+  $types = array(
+    array(
+      'type' => 'articles',
+      'name' => st('Article'),
       'base' => 'node_content',
       'description' => st('Sample content type for demonstrative purposes.'),
       'custom' => 1,
