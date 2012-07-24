@@ -121,46 +121,36 @@ function trekk_set_themes() {
  * Create a Page content type
  */
 function trekk_create_page_type() {
-  $types = array(
-    array(
-      'type' => 'pages',
-      'name' => st('Page'),
-      'base' => 'node_content',
-      'description' => st('Sample content type for demonstrative purposes.'),
-      'custom' => 1,
-      'modified' => 1,
-      'locked' => 0,
-    ),
+  $page = array(
+    'type' => 'pages',
+    'name' => st('Page'),
+    'base' => 'node_content',
+    'description' => st('Sample content type for demonstrative purposes.'),
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 0,
   );
 
-  foreach ($types as $type) {
-    $type = node_type_set_defaults($type);
-    node_type_save($type);
-    node_add_body_field($type);
-  }
-
+  $type = node_type_set_defaults($page);
+  node_type_save($type);
+  node_add_body_field($type);
 }
 
 /**
  * Create Article, a second sample content type
  */ 
 function trekk_create_article_type() {
-  $types = array(
-    array(
-      'type' => 'articles',
-      'name' => st('Article'),
-      'base' => 'node_content',
-      'description' => st('Sample content type for demonstrative purposes.'),
-      'custom' => 1,
-      'modified' => 1,
-      'locked' => 0,
-    ),
+  $article = array(
+    'type' => 'articles',
+    'name' => st('Article'),
+    'base' => 'node_content',
+    'description' => st('Sample content type for demonstrative purposes.'),
+    'custom' => 1,
+    'modified' => 1,
+    'locked' => 0,
   );
 
-  foreach ($types as $type) {
-    $type = node_type_set_defaults($type);
-    node_type_save($type);
-    node_add_body_field($type);
-  }
-
+  $type = node_type_set_defaults($article);
+  node_type_save($type);
+  node_add_body_field($type);
 }

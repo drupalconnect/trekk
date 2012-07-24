@@ -62,6 +62,13 @@ function trekk_site_type_form() {
     '#default_value' => 0
   );
 
+  $form['add_roles_workflow'] = array(
+    '#type' => 'checkbox',
+    '#title' => "Add Roles & Workflow",
+    '#description' => 'Add basic set of Roles and simple, initial Workflow.',
+    '#default_value' => 0
+  );
+
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -109,6 +116,10 @@ function trekk_site_type_form_submit(&$form, &$form_state) {
       $node->language = LANGUAGE_NONE;
       node_save($node);
     }
+  }
+
+  if ($form_state['values']['add_roles_workflow']) {
+    module_enable(array('trekk_roles')); // add trekk_workflow feature here
   }
 
 }

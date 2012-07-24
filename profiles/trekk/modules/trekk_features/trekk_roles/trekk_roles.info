@@ -1,0 +1,11 @@
+name = Trekk Roles
+description = Basic Default Roles: writer, editor, site admin
+core = 7.x
+package = Trekk
+version = 7.x-1.0
+project = trekk_roles
+dependencies[] = features
+features[features_api][] = api:1
+features[user_role][] = editor
+features[user_role][] = site admin
+features[user_role][] = writer
