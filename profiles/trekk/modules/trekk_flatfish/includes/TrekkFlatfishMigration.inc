@@ -25,11 +25,10 @@ abstract class TrekkFlatfishMigration extends DynamicMigration {
     }
 
 
-    // key is always URL
     $this->schemaKey = array(
-      'url' => array(
-        'type' => 'varchar',
-        'length' => 255,
+      'id' => array(
+        'type' => 'int',
+        'length' => 11,
       )
     );
 

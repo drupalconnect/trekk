@@ -61,9 +61,13 @@ function trekk_flatfish_default_trekk_flatfish_config() {
   $settings = Spyc::YAMLLoad($base . '/config.yml');
   $schema = Spyc::YAMLLoad($base . '/schema.yml');
 
+  if (!file_exists($base . '/config.yml')) {
+    dpm("The config.yml file is required.  Cannot find it at {$base}/config.yml.", NULL, 'error');
+    return '';
+  }
   if (!isset($settings['types'])) {
     dpm("It does not look like your config.yml file has the correct syntax.", NULL, 'error');
-    return;
+    return '';
   }
 
   foreach ($settings['types'] as $type => $values) {

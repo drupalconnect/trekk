@@ -18,7 +18,7 @@ class MediaMigration extends TrekkFlatfishMigration {
   }
 
   public function initDestination() {
-    $this->destination = new MigrateDestinationMedia('default', $options = array('copy_file' => FALSE, 'copy_blob' => TRUE));
+    $this->destination = new MigrateDestinationMedia('default', $options = array('copy_blob' => TRUE));
   }
 
   public function prepareRow($row) {

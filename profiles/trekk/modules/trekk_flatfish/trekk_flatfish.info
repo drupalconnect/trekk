@@ -1,7 +1,8 @@
 name = Trekk Flatfish
 description = Provides support for Flatfish migrations. Depends on SPYC and QueryPath (PHP 5.3).
-core = 7.x
+version = 7.x-1.x-dev
 package = Trekk
+core = 7.x
 
 dependencies[] = migrate
 dependencies[] = migrate_extras

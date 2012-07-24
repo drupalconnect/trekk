@@ -31,6 +31,7 @@ dependencies[] = entity
 dependencies[] = entity_token
 dependencies[] = features
 dependencies[] = libraries
+dependencies[] = media
 dependencies[] = strongarm
 dependencies[] = rules
 dependencies[] = rules_admin

@@ -76,15 +76,19 @@ class HTMLProcessor {
 
       if ($item) {
         // Filter syntax is just a json_encode()ed array
+        $attrs = getimagesize($item->uri);
+        $height = ((int)$img->attr('height'))? (int)$img->attr('height'): $attrs[0];
+        $width = ((int)$img->attr('width'))? (int)$img->attr('width'): $attrs[1];
         $repl = json_encode(array(
           'type'       => 'media',
+          // TODO find out if this view mode is cool 
           'view_mode'  => 'media_large',
           'fid'        => (int)$item->fid,
           'attributes' => array(
             'alt'      => check_plain($img->attr('alt')),
             'title'    => check_plain($img->attr('title')),
-            'height'   => (int)$img->attr('height'),
-            'width'    => (int)$img->attr('width'),
+            'height'   => $height, 
+            'width'    => $width,
           ),
         ));
 
