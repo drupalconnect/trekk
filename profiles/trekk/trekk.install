@@ -83,6 +83,11 @@ function trekk_add_standard_text_filters() {
         'weight' => 10,
         'status' => 1,
       ),
+      // Convert Media Tags
+      'media_filter' => array(
+        'weight' => 3,
+        'status' => 1,
+      ),
     ),
   );
   $full_html_format = (object) $full_html_format;
