@@ -81,13 +81,13 @@ class HTMLProcessor {
         $width = ((int)$img->attr('width'))? (int)$img->attr('width'): $attrs[1];
         $repl = json_encode(array(
           'type'       => 'media',
-          // TODO find out if this view mode is cool 
+          // TODO find out if this view mode is cool
           'view_mode'  => 'media_large',
           'fid'        => (int)$item->fid,
           'attributes' => array(
             'alt'      => check_plain($img->attr('alt')),
             'title'    => check_plain($img->attr('title')),
-            'height'   => $height, 
+            'height'   => $height,
             'width'    => $width,
           ),
         ));
