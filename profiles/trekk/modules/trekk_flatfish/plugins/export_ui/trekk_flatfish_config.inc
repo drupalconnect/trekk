@@ -36,18 +36,6 @@ function trekk_flatfish_ctools_export_ui_form(&$form, &$form_state) {
       '#title' => t('Group'),
       '#default_value' => (isset($config->group_name))? $config->group_name: '',
     ),
-    'options' => array(
-      '#type' => 'fieldset',
-      '#title' => t('Components'),
-      '#description' => 'Type of Migration to run',
-      '#tree' => TRUE,
-      'components' => array(
-        '#type' => 'checkboxes',
-        '#title' => t('Enable'),
-        '#options' => drupal_map_assoc(array(t('Node'), t('Media'))),
-        '#default_value' => (isset($config->config['components']))? array_filter($config->config['components']): array(),
-      ),
-    ),
   );
 }
 

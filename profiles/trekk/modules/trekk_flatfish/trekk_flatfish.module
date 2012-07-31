@@ -70,12 +70,13 @@ function trekk_flatfish_default_trekk_flatfish_config() {
     return '';
   }
 
+  $settings['types']['Flatfish'] = Array(); // temporary hack for media, TODO FIX THIS
   foreach ($settings['types'] as $type => $values) {
     $config[$type] = (object)array(
       'machine_name' => $type,
       'description' => '',
       'api_version' => 1,
-      'disabled' => TRUE,
+      'disabled' => FALSE,
       'config' => array(
         'driver' => 'mysql',
         'database' => $settings['db'],

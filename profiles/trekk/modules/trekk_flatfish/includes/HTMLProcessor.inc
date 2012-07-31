@@ -32,9 +32,33 @@ class HTMLProcessor {
   public function execute() {
     $this->updateMediaTokens();
 
+    // snag the HTML
     $html = $this->qp->top('body')->innerHTML();
-    return $html;
-    //return check_markup($html, 'purified_html'); // load 'purified HTML' format filter and run it against the text
+
+    // load htmlpurifier and clean it
+    $directory = variable_get('htmlpurifier_directory', 'sites/all/libraries/htmlpurifier');
+    require_once $directory . '/library/HTMLPurifier.auto.php';
+    $config = HTMLPurifier_Config::createDefault();
+    $allowed_tags = array(
+      'p',
+      'br',
+      'b',
+      'a[href]',
+      'li',
+      'ul',
+      'ol',
+      'h1',
+      'h2',
+      'h3',
+      'i',
+      'em',
+      'strong',
+      'img[src]',
+    );
+    $config->set('HTML.Allowed', implode(',', $allowed_tags));
+    $purifier = new HTMLPurifier($config);
+    // rm extra whitespace
+    return preg_replace('/\s\s+/', ' ', $purifier->purify($html));
   }
 
   /**
@@ -57,7 +81,7 @@ class HTMLProcessor {
       if (!is_numeric($id)) {
         continue;
       }
-      $item = $migration->getMappedEntity(array($migration_base_name . '_media'), array(array('id' => $id)));
+      $item = $migration->getMappedEntity(array('flatfish_media'), array(array('id' => $id)));
 
       if ($item) {
         $a->attr('href', file_create_url($item->uri));
@@ -72,7 +96,7 @@ class HTMLProcessor {
       if (!is_numeric($id)) {
         continue;
       }
-      $item = $migration->getMappedEntity(array($migration_base_name . '_media'), array(array('id' => $id)));
+      $item = $migration->getMappedEntity(array('flatfish_media'), array(array('id' => $id)));
 
       if ($item) {
         // Filter syntax is just a json_encode()ed array

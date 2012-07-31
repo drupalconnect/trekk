@@ -157,7 +157,6 @@ abstract class TrekkFlatfishMigration extends DynamicMigration {
    */
   public function getMappedEntity($source_migrations, $source_keys, $default = NULL) {
     foreach ($source_migrations as $source_migration) {
-      //handleSourceMigration('article_media', array('id' => #));
       $result = $this->handleSourceMigration($source_migrations, $source_keys, $default);
       if ($result) {
         $sourceMigration = Migration::getInstance($source_migration);
