@@ -1,6 +1,9 @@
 # Ignore configuration files that may contain sensitive information.
 sites/*/settings*.php
 
+# Ignore local-only module directories
+sites/all/modules/local
+
 # Ignore paths that contain user-generated content.
 sites/*/files
 sites/*/private
