@@ -7,16 +7,6 @@
  */
 
 /**
- * Implements hook_form_FORM_ID_alter() for install_configure_form().
- *
- * Allows the profile to alter the site configuration form.
- */
-function trekk_form_install_configure_form_alter(&$form, $form_state) {
-  // Pre-populate the site name with the server name.
-  $form['site_information']['site_name']['#default_value'] = 'TREKK TESTER';
-}
-
-/**
  * Implements hook_install_tasks().
  */
 function trekk_install_tasks() {
