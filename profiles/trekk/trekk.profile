@@ -42,6 +42,7 @@ function trekk_site_type_form() {
   $form['enable_flatfish'] = array(
     '#type' => 'checkbox',
     '#title' => "Enable Flatfish Support",
+    '#description' => st('<a href="https://github.com/drupalstaffing/flatfish">Flatfish</a> is a library for scraping content from legacy HTML and importing into Drupal.'),
     '#default_value' => 1
   );
 
