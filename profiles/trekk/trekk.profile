@@ -7,16 +7,6 @@
  */
 
 /**
- * Implements hook_form_FORM_ID_alter() for install_configure_form().
- *
- * Allows the profile to alter the site configuration form.
- */
-function trekk_form_install_configure_form_alter(&$form, $form_state) {
-  // Pre-populate the site name with the server name.
-  $form['site_information']['site_name']['#default_value'] = 'TREKK TESTER';
-}
-
-/**
  * Implements hook_install_tasks().
  */
 function trekk_install_tasks() {
@@ -55,20 +45,12 @@ function trekk_site_type_form() {
     '#default_value' => 1
   );
 
-  $form['add_demo_content'] = array(
-    '#type' => 'checkbox',
-    '#title' => "Add Demo Content",
-    '#description' => 'Only applicable for Servers.',
-    '#default_value' => 0
-  );
-
   $form['add_roles_workflow'] = array(
     '#type' => 'checkbox',
     '#title' => "Add Roles & Workflow",
     '#description' => 'Add basic set of Roles and simple, initial Workflow.',
     '#default_value' => 0
   );
-
 
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
@@ -93,29 +75,6 @@ function trekk_site_type_form_submit(&$form, &$form_state) {
   }
   else {
     module_enable(array('services', 'trekker_server'));
-  }
-
-  // only do this for servers
-  if ('server' == $form_state['values']['site_type'] && $form_state['values']['add_demo_content']) {
-    $bodies = array(
-      'Something pithy!',
-      'I <3 Drupal!',
-      'Happy 4th of July!',
-      'Yay!',
-      'These are random statements...'
-    );
-
-    for ($i = 0; $i < 5; $i++) {
-      // Create the new node.
-      $node = (object) array('type' => 'pages');
-      node_object_prepare($node);
-      $node->title = "Page $i"; 
-      $node->body[LANGUAGE_NONE]['value'] = $bodies[rand(0,4)]; 
-      $node->uid = 1;
-      // Make sure we set the default language
-      $node->language = LANGUAGE_NONE;
-      node_save($node);
-    }
   }
 
   if ($form_state['values']['add_roles_workflow']) {
