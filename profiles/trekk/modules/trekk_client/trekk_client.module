@@ -47,8 +47,6 @@ function trekk_client_ctools_plugin_directory($module, $plugin) {
 
 /**
 * Implements hook_ctools_plugin_api().
-*
-* Tell Ctools that we support the default_ffmpeg_converter_presets API.
 */
 function trekk_client_ctools_plugin_api($owner, $api) {
   if ($owner == 'trekk_client' && $api == 'default_trekk_client_configs') {
