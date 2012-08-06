@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Trekk Server Example feature.
+ */
+
+include_once 'trekk_server_example.features.inc';
