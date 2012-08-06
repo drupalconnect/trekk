@@ -95,14 +95,6 @@ class HTTPCurlRequest {
   	return $subjects;
   }
 
-  //public function getRequestParams() {
-  //  $this->_data = http_build_query($this->_params);
-  //
-  //	foreach ($this->_params as $key => $value) {
-  //  	$params[] = $key . '=' . rtrim($value);
-  //  }
-  //}
-
   public function getRequestMethod() {
   	return strtoupper(trim($this->_method));
   }
@@ -154,8 +146,8 @@ class HTTPCurlRequest {
     $this->_headers = curl_getinfo($ch);
 
     curl_close($ch);
-    //dpm($this->_headers);
-    //dpm(json_decode($data));
+    dpm($this->_headers);
+    dpm(json_decode($data));
 
     return $data;
   }

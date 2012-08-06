@@ -98,9 +98,11 @@ class TrekkClientSourceHTTP extends TrekkClientSource implements TrekkClientAggr
 		  );
 
     $params = isset($entity->params) ? $entity->params : array();
+    
     foreach ($params as $key => $value) {
     	$params[$key] = implode('=', array($key, $value));
     }
+    
     $params = implode("\n", $params);
 
 		$form['items_params'] = array(
@@ -110,6 +112,7 @@ class TrekkClientSourceHTTP extends TrekkClientSource implements TrekkClientAggr
 		  );
 
 		$schemas = trekk_client_source_schema();
+		
 		foreach ($schemas as $name => $schema) {
 			$options[$name] = !empty($schema['label']) ? $schema['label'] : ucwords($schema['name']);
 		}
@@ -121,13 +124,13 @@ class TrekkClientSourceHTTP extends TrekkClientSource implements TrekkClientAggr
       '#empty_value' => '',
       '#empty_option' => '--Select one--',
       '#options' => !empty($options) ? $options : array(),
-      );
+    );
 
 		$form['test_connection'] = array(
 		  '#type' => 'button',
 		  '#value' => t('Test Connection'),
 		  '#name' => 'test_connection',
-		  );
+		);
 
     if (isset($form_state['triggering_element']) && !strcmp('test_connection', $form_state['triggering_element']['#name'])) {
     	// The validator sets up necessary properties
@@ -140,13 +143,17 @@ class TrekkClientSourceHTTP extends TrekkClientSource implements TrekkClientAggr
     	  'params' => $this->params,
     	  'username' => $this->username,
     	  'password' => $this->password,
-    	  );
+    	);
+    	  
     	$this->__construct($config, $options = array());
 
   	  $count = $this->getItemsManager()->count();
 
       $idList = $this->getItemsManager()->getIdList();
       $idList = array_slice($idList, 0, 20);
+
+      $items = array();      
+      
       foreach ($idList as $id) {
       	$items[] = $this->getItemsManager()->getItem($id);
   	  }
@@ -167,7 +174,6 @@ class TrekkClientSourceHTTP extends TrekkClientSource implements TrekkClientAggr
   	    '#markup' => module_exists('devel') ? dprint_r($items, TRUE) : print_r($items, TRUE),
   	    '#description' => !module_exists('devel') ? t('Enable the devel module for more readable output.') : '',
   	    );
-
     }
 
 		return $form;
