@@ -7,7 +7,7 @@ function views_resource_index() {
  *
  * Mostly copied from services_views.module's retrieve callback. We've altered.
  */
-function views_resource_retrieve($return_type, $view_name, $display_id = 'default', $args = array(), $offset = 0, $limit = 10, $filters = array()) {
+function views_resource_retrieve($display_id, $view_name, $args = array(), $offset = 0, $limit = 10, $filters = array(), $output) {
   $result = array();
   $view = views_get_view($view_name);
 
@@ -33,7 +33,7 @@ function views_resource_retrieve($return_type, $view_name, $display_id = 'defaul
   }
 
   // If we display values and not themed view output.
-  if (!strcmp('data', $return_type)) {
+  if (!strcmp('data', strtolower($output))) {
     $view->set_display($display_id);
     $view->pre_execute();
     $view->execute();
@@ -71,7 +71,7 @@ function views_resource_retrieve($return_type, $view_name, $display_id = 'defaul
       }
     }
   }
-  elseif (!strcmp('preview', $return_type)) {
+  elseif (!strcmp('html', strtolower($output))) {
     // We want to keep the result an array.
     $result[] = $view->preview($display_id);
   }

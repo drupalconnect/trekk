@@ -15,3 +15,11 @@ GET /api/v1/content_export/preview
 GET /api/v1/content_export/data
 
 The "preview" and "data" components of the resource URI indicate how you wish the view to be output. "Preview" will output rendered HTML, while "data" will directly output the views result. On the client side, you may use one or the other URI depending on your needs. HTML output will be useful when you do not wish the client to create nodes from your exported data. "Data" will be usefull if you do wish to create nodes, or if you want to do other processing before rendering the content on a page.
+
+The server also accepts a number of URI query parameters:
+
+?display_id (Sets the ID of the views display, e.g., "default")
+?args (Allows passing views arguments. Be sure to pass them in the same order as defined in the view)
+?offset (Page number, for paged views)
+?limit (Number of items to display)
+?filters (Allows passing views filters)

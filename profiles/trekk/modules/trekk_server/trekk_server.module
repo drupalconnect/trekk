@@ -139,7 +139,7 @@ function trekk_server_services_resources() {
     'access arguments' => array('access content'),
     'access arguments append' => FALSE,
     'args' => array(
-      'return_type' => array(
+      'display' => array(
         'name' => 'return_type',
         'type' => 'string',
         'description' => 'The name of the view to get.',
@@ -153,14 +153,6 @@ function trekk_server_services_resources() {
         'source' => array('param' => 'view_name'),
         'optional' => TRUE,
         'default value' => $view->name,
-      ),
-      'display_id' => array(
-        'name' => 'display_id',
-        'type' => 'string',
-        'description' => 'The display ID of the view to get.',
-        'source' => array('param' => 'display_id'),
-        'optional' => TRUE,
-        'default value' => 'default',
       ),
       'args' => array(
         'name' => 'args',
@@ -186,14 +178,6 @@ function trekk_server_services_resources() {
         'optional' => TRUE,
         'default value' => 10,
       ),
-      'format_output' => array(
-        'name' => 'format_output',
-        'type' => 'bool',
-        'description' => 'Whether to return the raw data results or style the results.',
-        'source' => array('param' => 'format_output'),
-        'optional' => TRUE,
-        'default value' => FALSE,
-      ),
       'filters' => array(
         'name' => 'filters',
         'type' => 'array',
@@ -201,6 +185,13 @@ function trekk_server_services_resources() {
         'source' => array('param' => 'filters'),
         'optional' => TRUE,
         'default value' => array(),
+      ),
+      'output' => array(
+        'name' => 'output',
+        'type' => 'string',
+        'desctiption' => t('Output type. Defaults to "data" for views fields. "preview" also is accepted, for rendering HTML.'),
+        'source' => array('param' => 'output'),
+        'default value' => 'data',
       ),
     ),
   );
