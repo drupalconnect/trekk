@@ -5,6 +5,7 @@ core = 7.x
 
 dependencies[] = migrate
 dependencies[] = ctools
+dependencies[] = entity
 
 files[] = trekk_client.install
 files[] = trekk_client.module
