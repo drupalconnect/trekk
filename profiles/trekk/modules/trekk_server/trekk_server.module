@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Implementation of hook_menu
+ * Implements hook_menu
  *
  * Create a menu item for the server test
  */
-function trekker_server_menu() {
+function trekk_server_menu() {
   $items = array();
 
   $items['trekker-server-test'] = array(
@@ -21,7 +21,7 @@ function trekker_server_menu() {
 /**
  * Quick 'n Dirty way to test the Trekker Server
  */
-function trekker_server_test() {
+function trekk_server_test() {
   #	make into config setting
   #	$url = 'http://example.com/rest/taxonomy_term/getChildren';
   $getargs = array();
@@ -39,53 +39,11 @@ function trekker_server_test() {
 }
 
 /**
- * Implementation of hook_services_resources_alter
+ * Implements hook_services_resources_alter
  * 
  * Handles nodes and taxo--this is how we hook into the resource to define the callbacks.
  */
-function trekker_server_services_resources_alter(&$resources) {
-  // handle taxo
-  if (isset($resources['taxonomy_term'])) {
-    $taxonomy_term_actions = array(
-      'getChildren' => array(
-        'callback' => '_taxonomy_action_get_children',
-        'help' => t('Finds all children of a term ID.'),
-        'access arguments' => array('access content'),
-        'args' => array(
-          0 => array(
-            'name' => 'tid',
-            'type' => 'int',
-            'description' => t('A taxonomy term ID.'),
-            'source' => array(
-              'data' => 'tid',
-            ),
-            'optional' => TRUE,
-          ),
-          1 => array(
-            'name' => 'vid',
-            'type' => 'int',
-            'description' => t('An optional vocabulary ID to restrict the child search.'),
-            'source' => array(
-              'data' => 'vid',
-            ),
-            'optional' => TRUE,
-          ),
-          2 => array(
-            'name' => 'vocabulary_machine_name',
-            'type' => 'string',
-            'description' => t('An optional vocabulary machine name to restrict the child search.'),
-            'source' => array(
-              'data' => 'vocabulary_machine_name',
-            ),
-            'optional' => TRUE,
-          ),
-        ),
-      ),
-    );
-
-    $resources['taxonomy_term']['actions'] += $taxonomy_term_actions;
-  }
-
+function trekk_server_services_resources_alter(&$resources) {
   // handle nodes
   if (isset($resources['node'])) {
     $node_actions = array(
@@ -143,6 +101,7 @@ function trekker_server_services_resources_alter(&$resources) {
       ),
     );
     $resources['node'] += array('targeted_actions' => $node_actions);
+dpm($resources);
   }
 }
 
@@ -151,47 +110,108 @@ function trekker_server_services_resources_alter(&$resources) {
  *
  * Defines the endpoint resources to which we respond.
  */
-function trekker_server_services_resources() {
-  return $resources['views'] = array(
-    'targeted_actions' => array(
-      'render' => array(
-        'help' => t('Retrieves the output of a view. As POST: http://example.com/endpoint/views/<machine_name>/render. args[]=<args>, and display=<display> can be passed in data.'),
-        'callback' => '_views_resource_render',
-        'access arguments' => array('access content'),
-        'args' => array(
-          0 => array(
-            'name' => 'name',
-            'type' => 'string',
-            'optional' => FALSE,
-            'source' => array('path' => 0),
-            'description' => t('The name of the view'),
-          ),
-          1 => array(
-            'name' => 'display',
-            'type' => 'string',
-            'optional' => TRUE,
-            'source' => array('data' => 'display'),
-            'description' => t('The name of the view'),
-          ),
-          2 => array(
-            'name' => 'args',
-            'type' => 'array',
-            'optional' => TRUE,
-            'source' => array('data' => 'args'),
-            'description' => t('The name of the view'),
-          ),
-          3 => array(
-            'name' => 'limit',
-            'type' => 'array',
-            'optional' => TRUE,
-            'source' => array('data' => 'limit'),
-            'description' => t('The name of the view'),
-          ),
-        ),
+function trekk_server_services_resources() {
+	$resources['views']['index'] = array(
+    'help' => 'Retrieves an index of available views.',
+    'file' => array(
+      'type' => 'inc',
+      'module' => 'trekk_server',
+      'name' => 'resources/views_resource',
+    ),
+    'callback' => 'views_resource_index',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'access arguments append' => FALSE,
+  );
+  
+  $query = db_select('views_view', 'vv');
+  $result = $query->fields('vv', array('name'))->execute();
+  foreach ($result as $view) {
+
+  $resources[$view->name]['retrieve'] = array(
+    'help' => 'Retrieves a view.',
+    'file' => array(
+      'type' => 'inc',
+      'module' => 'trekk_server',
+      'name' => 'resources/views_resource',
+    ),
+    'callback' => 'views_resource_retrieve',
+    'access callback' => 'user_access',
+    'access arguments' => array('access content'),
+    'access arguments append' => FALSE,
+    'args' => array(
+      'return_type' => array(
+        'name' => 'return_type',
+        'type' => 'string',
+        'description' => 'The name of the view to get.',
+        'source' => array('path' => '0'),
+        'optional' => FALSE,
+      ),
+      'view_name' => array(
+        'name' => 'view_name',
+        'type' => 'string',
+        'description' => t('The name of the view to get.'),
+        'source' => array('param' => 'view_name'),
+        'optional' => TRUE,
+        'default value' => $view->name,
+      ),
+      'display_id' => array(
+        'name' => 'display_id',
+        'type' => 'string',
+        'description' => 'The display ID of the view to get.',
+        'source' => array('param' => 'display_id'),
+        'optional' => TRUE,
+        'default value' => 'default',
+      ),
+      'args' => array(
+        'name' => 'args',
+        'type' => 'array',
+        'description' => 'A list of arguments to pass to the view.',
+        'source' => array('param' => 'args'),
+        'optional' => TRUE,
+        'default value' => array(),
+      ),
+      'offset' => array(
+        'name' => 'offset',
+        'type' => 'int',
+        'description' => 'The number of the entry for the page begin with.',
+        'source' => array('param' => 'offset'),
+        'optional' => TRUE,
+        'default value' => 0,
+      ),
+      'limit' => array(
+        'name' => 'limit',
+        'type' => 'int',
+        'description' => 'The total number of entries to list.',
+        'source' => array('param' => 'limit'),
+        'optional' => TRUE,
+        'default value' => 10,
+      ),
+      'format_output' => array(
+        'name' => 'format_output',
+        'type' => 'bool',
+        'description' => 'Whether to return the raw data results or style the results.',
+        'source' => array('param' => 'format_output'),
+        'optional' => TRUE,
+        'default value' => FALSE,
+      ),
+      'filters' => array(
+        'name' => 'filters',
+        'type' => 'array',
+        'description' => 'A list of filters to pass to the view.  These are defined by the exposed filters on your view.  Example call: <code>/views/your_view?filters[nid]=12345</code>',
+        'source' => array('param' => 'filters'),
+        'optional' => TRUE,
+        'default value' => array(),
       ),
     ),
   );
+  }
+  return $resources;
 }
+
+
+
+
 
 /**
  * Render the given View's preview
