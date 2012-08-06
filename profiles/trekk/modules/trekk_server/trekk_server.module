@@ -32,8 +32,8 @@ function trekk_server_test() {
   }
   $options = array('method' => 'POST', 'data' => drupal_http_build_query($getargs));
   $response = drupal_http_request($url, $options);
-  dpm($response);
-  dpm(drupal_json_decode($response->data));
+
+  //dpm(drupal_json_decode($response->data));
 
   return array('#markup' => t('Trekker Server Test'));
 }
@@ -101,7 +101,6 @@ function trekk_server_services_resources_alter(&$resources) {
       ),
     );
     $resources['node'] += array('targeted_actions' => $node_actions);
-dpm($resources);
   }
 }
 
