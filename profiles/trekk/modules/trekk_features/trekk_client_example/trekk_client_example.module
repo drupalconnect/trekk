@@ -1,0 +1,50 @@
+<?php
+/**
+ * @file
+ * Drupal needs this blank file.
+ */
+
+/**
+ * Implements hook_trekk_client_source_schema()
+ */
+function trekk_client_example_trekk_client_source_schema() {
+	$schema = array();
+
+  $schema['trekk_server_example'] = array(
+    'name' => 'trekk_server_example',
+    'label' => t('Trekk Server Example'),
+    'fields' => array(
+      'nid' => array(
+        'type' => 'int',
+        'length' => 11,
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'node_title' => array(
+        'type' => 'varchar',
+        'length' => 255
+      ),
+    ),
+    'primary key' => array('nid'),
+  );
+	
+	return $schema;
+}
+
+class TrekkServerContentExport extends TrekkClientMapping implements TrekkClientAggregatorMappingInterface {
+	public function __sleep() {
+    return parent::__sleep();
+  }
+  
+	public static function info() {
+		return array(
+		  'name' => 'Trekk Server content_export to node',
+		  'description' => t(),
+		);
+	}
+	
+	public function getMappings() {
+		$mappings = array();
+		return $mappings;
+  }
+}

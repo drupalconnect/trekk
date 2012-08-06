@@ -62,7 +62,6 @@ class TrekkClientAggregatorConfig extends Entity {
     //$result = $aggregator->processRollback();
     //$result = $aggregator->processImport(array('limit' => 5));
 
-
     // Ops
     $machine_name = $aggregator->getMachineName();
     $content['dashboard'] = drupal_get_form('trekk_client_aggregator_dashboard', $machine_name);

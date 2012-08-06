@@ -36,7 +36,8 @@ abstract class TrekkClientMapping {
    * The aggregator that composed this object, passed via buildMapping().
    */
   protected $_aggregator;
-
+  public static function info() {
+  }
 	/**
  	 * Builder for our options form.
  	 */
@@ -48,11 +49,6 @@ abstract class TrekkClientMapping {
     $aggregators = entity_load('aggregator_config');
 
     $options = array();
-
-    // It would be nice not not have have to save the whole aggregator before selecting it as a source.
-    //$options = array(
-    //  'THIS' => t('This aggregator'),
-    //  );
 
     foreach ($aggregators as $aggregator) {
     	$options[$aggregator->machine_name] = $aggregator->name;

@@ -37,7 +37,7 @@ $plugin = array(
  */
 function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
   $config =& $form_state['item'];
-  
+    	
   // Classes that implement the following interfaces are available for selection
   $interfaces = array(
     'source' => 'TrekkClientAggregatorSourceInterface',
@@ -45,17 +45,17 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
     'mapping' => 'TrekkClientAggregatorMappingInterface',
     );
 
-  $result = db_select('registry', 'r')
-            ->fields('r', array('name', 'filename', 'module'))
-            ->condition('type', 'class')
-            ->condition('module', 'trekk_client', '=')
-            ->condition('filename', '%.test', 'NOT LIKE')
-            ->execute();
-  
+  $query = db_select('registry', 'r');
+  $result = $query
+    ->fields('r', array('name', 'filename', 'module'))
+    ->condition('type', 'class')
+    ->condition('filename', '%.test', 'NOT LIKE')
+    ->execute();
+
   // Collate our classes by the components they implement
   foreach ($result as $record) {
   	$class = $record->name;
-
+  	
   	try { $reflector = new ReflectionClass($class); } catch (Exception $e) { continue; }
 
     foreach ($interfaces as $component => $interface) {

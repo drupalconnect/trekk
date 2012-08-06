@@ -1,0 +1,11 @@
+name = Trekk Client Example
+description = Example configuration for Trekk Client, to be used in conjunction with Trekk Server Example
+core = 7.x
+package = Trekk
+php = 5.2.4
+version = 7.x-1.1
+project = trekk_client_example
+dependencies[] = trekk_client
+features[ctools][] = trekk_client:default_trekk_client_configs:1
+features[features_api][] = api:1
+features[trekk_client_aggregator][] = Example
