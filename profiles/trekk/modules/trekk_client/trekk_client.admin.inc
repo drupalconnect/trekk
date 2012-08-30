@@ -1,5 +1,4 @@
 <?php
-<?php
 /**
  * @file
  * Administrative forms and pages
