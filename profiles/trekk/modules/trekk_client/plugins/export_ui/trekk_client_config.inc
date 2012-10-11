@@ -36,13 +36,17 @@ $plugin = array(
  * configuration form is pulled in here.
  */
 function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
+  //dpm(module_invoke_all('trekk_client_source_schema'));
+  //dpm(module_invoke_all('trekk_client_mapping'));
+  
   $config =& $form_state['item'];
-    	
+
   // Classes that implement the following interfaces are available for selection
+  // @todo: remove this. It was brilliant, but ill conceived
   $interfaces = array(
     'source' => 'TrekkClientAggregatorSourceInterface',
     'destination' => 'TrekkClientAggregatorDestinationInterface',
-    'mapping' => 'TrekkClientAggregatorMappingInterface',
+    //'mapping' => 'TrekkClientAggregatorMappingInterface',
     );
 
   $query = db_select('registry', 'r');
@@ -66,9 +70,11 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
       }
     }
 
-    $interface = 'TrekkClientAggregatorSourceInterface';
+    //$interface = 'TrekkClientAggregatorSourceInterface';
   }
-
+  //$options['mapping_options'] = array('TrekkServerContentExport' => "TrekkServerContentExport");
+  //dpm($foo = new TrekkServerContentExport());
+  //dpm($options);
   extract($options);
 
   $form['name'] = array(
@@ -76,7 +82,7 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
     '#type' => 'textfield',
     '#default_value' => $config->name,
   );
-
+  //dpm($config);
   foreach (array('source', 'destination', 'mapping') as $section) {
 
 	  // Pull in the section configuration form
@@ -96,7 +102,7 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
 	    '#default_value' => isset($config->$section) ? get_class($config->$section) : '',
 	    '#options' => isset(${$section . '_options'}) ? ${$section . '_options'} : array(),
 	    '#empty_option' => '--' . t('Select one') . '--',
-	    '#empty_value' => '',
+	    '#empty_value' => NULL,
 	    '#ajax' => array(
 	      'callback' => 'trekk_client_ctools_export_ui_form_' . $section,
 	      'wrapper' => $section,
@@ -106,13 +112,15 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
 	    );
 	  
 	  // If a class has been selected then pull in its config form  
-	  if (is_object($form_state['item']->$section)) {
+    if (is_object($form_state['item']->$section)) {
+      dsm('Building component form');
+      dpm($form, 'form');
+      dpm($form_state, 'form state');
+      
 	  	$form[$section][$section . '_options'] = $form_state['item']->{$section}->configForm($form, $form_state, $form_state['item']->{$section}, $op = 'edit');
 	  }
 
   } // end foreach
-  
-  return $form;
 }
 
 /**
@@ -120,11 +128,17 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
  */
 function trekk_client_ctools_export_ui_form_validate($form, &$form_state) {
   foreach (array('source', 'destination', 'mapping') as $section) {
-  	if (!is_object($form_state['item']->$section) && !empty($form_state['values'][$section . '_class'])) {
-  		$class = $form_state['values'][$section . '_class'];
-  		$form_state['item']->$section = new $class();
-  	}
-  	if (is_callable(array($form_state['item']->$section, 'configFormValidate'))) {
+    if (is_null($form_state['values'][$section . '_class']) || empty($form_state['values'][$section . '_class'])) {
+      // Remove existing component entity
+      $form_state['item']->$section = NULL;
+    }
+    else if (class_exists($form_state['values'][$section . '_class'])) {
+      // Create a component entity
+      $class = $form_state['values'][$section . '_class'];
+      $form_state['item']->$section = new $class();
+    }
+    if (is_callable(array($form_state['item']->$section, 'configFormValidate'))) {
+      // Validate a component configuration form
   	  $form_state['item']->$section->configFormValidate($form, $form_state);
   	}
   }
