@@ -36,8 +36,10 @@ abstract class TrekkClientMapping {
    * The aggregator that composed this object, passed via buildMapping().
    */
   protected $_aggregator;
+
   public static function info() {
   }
+
 	/**
  	 * Builder for our options form.
  	 */
@@ -46,12 +48,13 @@ abstract class TrekkClientMapping {
 
     $mappings = $this->getMappings();
 
-    $aggregators = entity_load('aggregator_config');
+    //$aggregators = entity_load('aggregator_config');
+    $aggregators = (ctools_export_crud_load_all('trekk_client_aggregator'));
 
     $options = array();
 
     foreach ($aggregators as $aggregator) {
-    	$options[$aggregator->machine_name] = $aggregator->name;
+    	$options[$aggregator->name] = $aggregator->name;
     }
 
     // Build a form element for selecting the source migration on fields that want one

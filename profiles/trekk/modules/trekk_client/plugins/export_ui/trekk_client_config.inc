@@ -36,11 +36,6 @@ $plugin = array(
  * configuration form is pulled in here.
  */
 function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
-  //dpm(module_invoke_all('trekk_client_source_schema'));
-  //dpm(module_invoke_all('trekk_client_mapping'));
-  
-  $config =& $form_state['item'];
-
   // Classes that implement the following interfaces are available for selection
   // @todo: remove this. It was brilliant, but ill conceived
   $interfaces = array(
@@ -72,9 +67,9 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
 
     //$interface = 'TrekkClientAggregatorSourceInterface';
   }
-  //$options['mapping_options'] = array('TrekkServerContentExport' => "TrekkServerContentExport");
-  //dpm($foo = new TrekkServerContentExport());
-  //dpm($options);
+
+  $options['mapping_options'] = array('TrekkServerContentExport' => "TrekkServerContentExport");
+
   extract($options);
 
   $form['name'] = array(
@@ -82,10 +77,9 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
     '#type' => 'textfield',
     '#default_value' => $config->name,
   );
-  //dpm($config);
-  foreach (array('source', 'destination', 'mapping') as $section) {
 
-	  // Pull in the section configuration form
+  foreach (array('source', 'destination', 'mapping') as $section) {
+    // Pull in the section configuration form
 	  $form[$section] = array(
 	    '#type' => 'fieldset',
 	    '#title' => t(ucwords($section)),
@@ -113,10 +107,6 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
 	  
 	  // If a class has been selected then pull in its config form  
     if (is_object($form_state['item']->$section)) {
-      dsm('Building component form');
-      dpm($form, 'form');
-      dpm($form_state, 'form state');
-      
 	  	$form[$section][$section . '_options'] = $form_state['item']->{$section}->configForm($form, $form_state, $form_state['item']->{$section}, $op = 'edit');
 	  }
 

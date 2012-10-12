@@ -9,10 +9,10 @@
  */
 function trekk_client_example_trekk_client_source_schema() {
 	$schema = array();
-
   $schema['trekk_server_example'] = array(
     'name' => 'trekk_server_example',
     'label' => t('Trekk Server Example'),
+    'description' => t('Describe the data exposed by Trekk Server Example'),
     'fields' => array(
       'nid' => array(
         'type' => 'int',
@@ -30,7 +30,21 @@ function trekk_client_example_trekk_client_source_schema() {
 	
 	return $schema;
 }
+function trekk_client_example_trekk_client_mapping() {
+  $mapping = array();
+  $mapping['trekk_server_example_to_node_article'] = array(
+    'node_title' => array(
+      'source' => 'node_title',
+      'destination' => 'node_title',
+      // Keys correspond to migrate methods
+      // 'sourceMigration' => (string) foo,
+      // 'callbacks' => array((string)foo, [...]),
+      // ...
+    ),
+  );
 
+  return $mapping;
+}
 class TrekkServerContentExport extends TrekkClientMapping implements TrekkClientAggregatorMappingInterface {
 	public function __sleep() {
     return parent::__sleep();
