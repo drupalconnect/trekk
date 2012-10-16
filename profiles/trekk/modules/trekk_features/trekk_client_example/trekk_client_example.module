@@ -30,33 +30,33 @@ function trekk_client_example_trekk_client_source_schema() {
 	
 	return $schema;
 }
-function trekk_client_example_trekk_client_mapping() {
-  $mapping = array();
-  $mapping['trekk_server_example_to_node_article'] = array(
-    'node_title' => array(
-      'source' => 'node_title',
-      'destination' => 'node_title',
-      // Keys correspond to migrate methods
-      // 'sourceMigration' => (string) foo,
-      // 'callbacks' => array((string)foo, [...]),
-      // ...
-    ),
-  );
 
-  return $mapping;
-}
+/**
+ * Example mapping class. Start your mapping by boiler plating this one. Note that extending TrekkClientMapping
+ * isn't required, but implementing TrekkClientAggregatorMappingInterface is.
+ */
 class TrekkServerContentExport extends TrekkClientMapping implements TrekkClientAggregatorMappingInterface {
+  /**
+   * Call the parent's sleep method.
+   */
 	public function __sleep() {
     return parent::__sleep();
   }
-  
+
+  /**
+   * Provide an info array
+   */
 	public static function info() {
 		return array(
 		  'name' => 'Trekk Server content_export to node',
-		  'description' => t(),
+		  'description' => t("An example mapping for use with Trekk Server's content_export"),
 		);
 	}
-	
+
+  /**
+   * Return an array of mapping definitions. Array is keyed by the source field. Mapping definitions
+   * pretty much mirror the methods on Migrate's mapping classes. 
+   */
 	public function getMappings() {
 		$mappings = array();
 		return $mappings;

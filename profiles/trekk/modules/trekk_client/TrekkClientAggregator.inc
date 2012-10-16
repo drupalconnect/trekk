@@ -54,7 +54,7 @@ class TrekkClientAggregatorConfig extends Entity {
   }
 
 
-  public function buildContent($view_mode, $langcode = 'und', $content = array()) {
+  public function buildContent($view_mode = 'full', $langcode = NULL) {
     module_load_include('inc', 'trekk_client', 'trekk_client.admin.aggregator');
     $config = (array)$this;
     $aggregator = MigrationBase::getInstance($this->machine_name, $class = NULL, $config);

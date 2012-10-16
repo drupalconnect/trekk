@@ -9,3 +9,4 @@ dependencies[] = trekk_client
 features[ctools][] = trekk_client:default_trekk_client_configs:1
 features[features_api][] = api:1
 features[trekk_client_aggregator][] = Example
+files[] = trekk_client_example.module

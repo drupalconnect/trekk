@@ -35,14 +35,16 @@ $plugin = array(
  * will be available for selection. When a class is selected for a given component its
  * configuration form is pulled in here.
  */
-function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
+function trekk_client_ctools_export_ui_form(&$form, &$form_state ) {
+  $config = $form_state['item'];
+
   // Classes that implement the following interfaces are available for selection
   // @todo: remove this. It was brilliant, but ill conceived
   $interfaces = array(
     'source' => 'TrekkClientAggregatorSourceInterface',
     'destination' => 'TrekkClientAggregatorDestinationInterface',
-    //'mapping' => 'TrekkClientAggregatorMappingInterface',
-    );
+    'mapping' => 'TrekkClientAggregatorMappingInterface',
+  );
 
   $query = db_select('registry', 'r');
   $result = $query
@@ -64,19 +66,11 @@ function trekk_client_ctools_export_ui_form(&$form, &$form_state) {
       	$options[$component . '_options'][$class] = $info['name'];
       }
     }
-
-    //$interface = 'TrekkClientAggregatorSourceInterface';
   }
 
   $options['mapping_options'] = array('TrekkServerContentExport' => "TrekkServerContentExport");
 
   extract($options);
-
-  $form['name'] = array(
-    '#title' => t('Label'),
-    '#type' => 'textfield',
-    '#default_value' => $config->name,
-  );
 
   foreach (array('source', 'destination', 'mapping') as $section) {
     // Pull in the section configuration form
