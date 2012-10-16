@@ -146,8 +146,8 @@ class HTTPCurlRequest {
     $this->_headers = curl_getinfo($ch);
 
     curl_close($ch);
-    dpm($this->_headers);
-    dpm(json_decode($data));
+    //dpm($this->_headers);
+    //dpm(json_decode($data));
 
     return $data;
   }
